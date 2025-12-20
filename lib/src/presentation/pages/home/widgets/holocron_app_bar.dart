@@ -6,7 +6,14 @@ import 'app_bar_options.dart';
 import 'profile_button.dart';
 
 class HolocronAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const HolocronAppBar({super.key});
+  final int selectedIndex;
+  final Function(int) onOptionSelected;
+
+  const HolocronAppBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onOptionSelected,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(70);
@@ -96,7 +103,10 @@ class HolocronAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ),
                           ),
                           const SizedBox(width: 20),
-                          const AppBarOptions(),
+                          AppBarOptions(
+                            selectedIndex: selectedIndex,
+                            onOptionSelected: onOptionSelected,
+                          ),
                         ],
                       ),
                     ),

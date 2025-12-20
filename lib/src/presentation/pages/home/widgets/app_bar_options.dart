@@ -1,33 +1,30 @@
 import 'package:flutter/material.dart';
 import '../../../../config/theme/app_theme.dart';
 
-class AppBarOptions extends StatefulWidget {
-  const AppBarOptions({super.key});
+class AppBarOptions extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onOptionSelected;
 
-  @override
-  State<AppBarOptions> createState() => _AppBarOptionsState();
-}
+  const AppBarOptions({
+    super.key,
+    required this.selectedIndex,
+    required this.onOptionSelected,
+  });
 
-class _AppBarOptionsState extends State<AppBarOptions> {
-  String _selectedOption = 'CHARACTERS';
-
-  final List<String> _options = ['CHARACTERS', 'FAVORITES'];
+  static const List<String> _options = ['CHARACTERS', 'FAVORITES'];
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: _options.map((option) {
-        final isSelected = option == _selectedOption;
+      children: List.generate(_options.length, (index) {
+        final option = _options[index];
+        final isSelected = index == selectedIndex;
         return _AppBarOptionItem(
           label: option,
           isSelected: isSelected,
-          onTap: () {
-            setState(() {
-              _selectedOption = option;
-            });
-          },
+          onTap: () => onOptionSelected(index),
         );
-      }).toList(),
+      }),
     );
   }
 }

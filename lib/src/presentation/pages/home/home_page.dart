@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:holocron/src/presentation/widgets/custom_divider.dart';
-import '../../../config/theme/app_theme.dart';
-import '../../widgets/widgets.dart';
-import 'widgets/holocron_app_bar.dart';
 import 'widgets/hero_section.dart';
 import 'widgets/character_card.dart';
 import 'widgets/load_more_button.dart';
@@ -26,48 +23,38 @@ class HomePage extends StatelessWidget {
       {'name': 'R2-D2', 'image': 'people/r2d2.png'},
     ];
 
-    return Scaffold(
-      backgroundColor: AppTheme.spaceBlack,
-      extendBodyBehindAppBar: true,
-      appBar: const HolocronAppBar(),
-      body: Stack(
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const StarfieldBackground(),
-          SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 80), // Espacio para el AppBar
-                // Hero Section con título y buscador
-                const HeroSection(),
+          const SizedBox(height: 80), // Espacio para el AppBar
+          // Hero Section con título y buscador
+          const HeroSection(),
 
-                const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-                // Results Header
-                ResultsHeader(resultsCount: characters.length),
+          // Results Header
+          ResultsHeader(resultsCount: characters.length),
 
-                // Divider
-                const CustomDivider(),
+          // Divider
+          const CustomDivider(),
 
-                // Characters Grid
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: _CharactersGrid(characters: characters),
-                ),
-
-                const SizedBox(height: 40),
-
-                // Load More Button
-                const LoadMoreButton(
-                  onPressed: null, // Por ahora no hace nada
-                ),
-
-                // Footer
-                const AppFooter(),
-              ],
-            ),
+          // Characters Grid
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: _CharactersGrid(characters: characters),
           ),
+
+          const SizedBox(height: 40),
+
+          // Load More Button
+          const LoadMoreButton(
+            onPressed: null, // Por ahora no hace nada
+          ),
+
+          // Footer
+          const AppFooter(),
         ],
       ),
     );
