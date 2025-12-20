@@ -10,6 +10,7 @@ abstract class AppTheme {
   static const Color accentRed = Color(0xFFFF3D00);
   static const Color deepSpace = Color(0xFF050811);
   static const Color cardBackground = Color(0xFF141828);
+  static const Color terminalGreen = Color(0xFF00FF88);
 
   // Text Styles
   static const TextStyle heading1 = TextStyle(
