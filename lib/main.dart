@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:holocron/src/config/theme/app_theme.dart';
+import 'package:holocron/src/presentation/pages/home/home_page.dart';
 
 void main() {
   runApp(const MainApp());
@@ -9,12 +11,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      title: 'Holocron',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      home: const HomePage(),
     );
   }
 }
