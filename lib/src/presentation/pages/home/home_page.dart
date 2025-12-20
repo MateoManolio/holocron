@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:holocron/src/presentation/widgets/custom_divider.dart';
 import '../../../config/theme/app_theme.dart';
 import '../../widgets/widgets.dart';
 import 'widgets/holocron_app_bar.dart';
@@ -27,6 +28,7 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: AppTheme.spaceBlack,
+      extendBodyBehindAppBar: true,
       appBar: const HolocronAppBar(),
       body: Stack(
         children: [
@@ -36,6 +38,7 @@ class HomePage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 80), // Espacio para el AppBar
                 // Hero Section con título y buscador
                 const HeroSection(),
 
@@ -45,25 +48,7 @@ class HomePage extends StatelessWidget {
                 ResultsHeader(resultsCount: characters.length),
 
                 // Divider
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    bottom: 20,
-                  ),
-                  child: Container(
-                    height: 1,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.transparent,
-                          AppTheme.holoBlue.withValues(alpha: 0.3),
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                const CustomDivider(),
 
                 // Characters Grid
                 Padding(

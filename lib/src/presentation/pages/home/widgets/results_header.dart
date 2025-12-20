@@ -53,38 +53,70 @@ class _ResultsHeaderState extends State<ResultsHeader> {
                 ),
               ),
               const SizedBox(width: 8),
-              Theme(
-                data: Theme.of(
-                  context,
-                ).copyWith(canvasColor: AppTheme.cardBackground),
-                child: DropdownButton<String>(
-                  value: _selectedSort,
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down,
-                    color: Colors.white,
-                    size: 18,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: AppTheme.cardBackground.withValues(alpha: 0.8),
+                  borderRadius: BorderRadius.circular(25),
+                  border: Border.all(
+                    color: AppTheme.holoBlue.withValues(alpha: 0.1),
+                    width: 1.5,
                   ),
-                  underline: const SizedBox(),
-                  style: AppTheme.bodyText.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.holoBlue.withValues(alpha: 0.03),
+                      blurRadius: 15,
+                      spreadRadius: 0,
+                    ),
+                  ],
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: _selectedSort,
+                    focusColor: Colors.transparent,
+                    icon: const Icon(
+                      Icons.unfold_more_rounded,
+                      color: AppTheme.holoBlue,
+                      size: 16,
+                    ),
+                    dropdownColor: AppTheme.cardBackground,
+                    borderRadius: BorderRadius.circular(20),
+                    style: AppTheme.bodyText.copyWith(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _selectedSort = newValue;
+                        });
+                      }
+                    },
+                    selectedItemBuilder: (BuildContext context) {
+                      return _sortOptions.map<Widget>((String item) {
+                        return Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            item,
+                            style: AppTheme.bodyText.copyWith(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      }).toList();
+                    },
+                    items: _sortOptions.map<DropdownMenuItem<String>>((
+                      String value,
+                    ) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
                   ),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      setState(() {
-                        _selectedSort = newValue;
-                      });
-                    }
-                  },
-                  items: _sortOptions.map<DropdownMenuItem<String>>((
-                    String value,
-                  ) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
               ),
             ],
