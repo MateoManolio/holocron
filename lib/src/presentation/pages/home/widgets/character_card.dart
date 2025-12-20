@@ -63,120 +63,120 @@ class _CharacterCardState extends State<CharacterCard>
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) {
-        setState(() => _isHovered = true);
-        _controller.forward();
-      },
-      onExit: (_) {
-        setState(() => _isHovered = false);
-        _controller.reverse();
-      },
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: AnimatedBuilder(
-          animation: _favoriteController,
-          builder: (context, child) {
-            return CustomPaint(
-              foregroundPainter: BorderSpillPainter(
-                progress: _favoriteController.value,
-                color: AppTheme.imperialYellow,
-                borderRadius: 16.0,
-                strokeWidth: 2.5,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: AppTheme.cardBackground,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: _isHovered
-                        ? AppTheme.holoBlue.withValues(alpha: 0.5)
-                        : AppTheme.darkGray.withValues(alpha: 0.3),
-                    width: 1.5,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: widget.isFavorite
-                          ? AppTheme.imperialYellow
-                          : _isHovered
-                          ? AppTheme.holoBlue.withValues(alpha: 0.2)
-                          : Colors.black.withValues(alpha: 0.3),
-                      blurRadius: _isHovered ? 15 : 8,
-                      spreadRadius: _isHovered ? 1 : 0,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: MouseRegion(
+        onEnter: (_) {
+          setState(() => _isHovered = true);
+          _controller.forward();
+        },
+        onExit: (_) {
+          setState(() => _isHovered = false);
+          _controller.reverse();
+        },
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: AnimatedBuilder(
+            animation: _favoriteController,
+            builder: (context, child) {
+              return CustomPaint(
+                foregroundPainter: BorderSpillPainter(
+                  progress: _favoriteController.value,
+                  color: AppTheme.imperialYellow,
+                  borderRadius: 16.0,
+                  strokeWidth: 2.5,
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Stack(
-                    children: [
-                      // Character image
-                      Column(
-                        children: [
-                          Expanded(
-                            child: Container(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppTheme.cardBackground,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: _isHovered
+                          ? AppTheme.holoBlue.withValues(alpha: 0.5)
+                          : AppTheme.darkGray.withValues(alpha: 0.3),
+                      width: 1.5,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: widget.isFavorite
+                            ? AppTheme.imperialYellow
+                            : _isHovered
+                            ? AppTheme.holoBlue.withValues(alpha: 0.2)
+                            : Colors.black.withValues(alpha: 0.3),
+                        blurRadius: _isHovered ? 15 : 8,
+                        spreadRadius: _isHovered ? 1 : 0,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Stack(
+                      children: [
+                        // Character image
+                        Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      AppTheme.darkGray.withValues(alpha: 0.3),
+                                      AppTheme.cardBackground,
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                ),
+                                child: Image.asset(
+                                  widget.imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Center(
+                                      child: Icon(
+                                        Icons.person,
+                                        size: 60,
+                                        color: AppTheme.lightGray.withValues(
+                                          alpha: 0.3,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            // Character name
+                            Container(
                               width: double.infinity,
+                              padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   colors: [
-                                    AppTheme.darkGray.withValues(alpha: 0.3),
                                     AppTheme.cardBackground,
+                                    AppTheme.darkGray.withValues(alpha: 0.8),
                                   ],
                                   begin: Alignment.topCenter,
                                   end: Alignment.bottomCenter,
                                 ),
                               ),
-                              child: Image.asset(
-                                widget.imagePath,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Center(
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 60,
-                                      color: AppTheme.lightGray.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                    ),
-                                  );
-                                },
+                              child: Text(
+                                widget.name,
+                                style: AppTheme.heading3.copyWith(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          ),
-                          // Character name
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  AppTheme.cardBackground,
-                                  AppTheme.darkGray.withValues(alpha: 0.8),
-                                ],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                            ),
-                            child: Text(
-                              widget.name,
-                              style: AppTheme.heading3.copyWith(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Favorite button
-                      Positioned(
-                        top: 12,
-                        right: 12,
-                        child: GestureDetector(
-                          onTap: widget.onTap,
+                          ],
+                        ),
+                        // Favorite button
+                        Positioned(
+                          top: 12,
+                          right: 12,
                           child: Container(
                             width: 36,
                             height: 36,
@@ -214,13 +214,13 @@ class _CharacterCardState extends State<CharacterCard>
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
