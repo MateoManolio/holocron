@@ -89,11 +89,28 @@ class HomePage extends StatelessWidget {
   }
 }
 
-/// Grid de personajes con animación de entrada, mover cond data real
-class _CharactersGrid extends StatelessWidget {
+/// Grid de personajes con animación de entrada y gestión de favoritos
+class _CharactersGrid extends StatefulWidget {
   final List<Map<String, String>> characters;
 
   const _CharactersGrid({required this.characters});
+
+  @override
+  State<_CharactersGrid> createState() => _CharactersGridState();
+}
+
+class _CharactersGridState extends State<_CharactersGrid> {
+  final Set<int> _favorites = {};
+
+  void _toggleFavorite(int index) {
+    setState(() {
+      if (_favorites.contains(index)) {
+        _favorites.remove(index);
+      } else {
+        _favorites.add(index);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,9 +123,12 @@ class _CharactersGrid extends StatelessWidget {
         mainAxisSpacing: 16,
         childAspectRatio: 0.75,
       ),
-      itemCount: characters.length,
+      // Ajuste dinámico de columnas para desktop
+      itemCount: widget.characters.length,
       itemBuilder: (context, index) {
-        final character = characters[index];
+        final character = widget.characters[index];
+        final isFavorite = _favorites.contains(index);
+
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.0, end: 1.0),
           duration: Duration(milliseconds: 400 + (index * 50)),
@@ -125,13 +145,8 @@ class _CharactersGrid extends StatelessWidget {
           child: CharacterCard(
             name: character['name']!,
             imagePath: character['image']!,
-            isFavorite: false, // Esto debe venir del state
-            onTap: () {
-              // Acción al tocar personaje
-            },
-            onFavoriteTap: () {
-              // Acción de favorito
-            },
+            isFavorite: isFavorite,
+            onTap: () => _toggleFavorite(index),
           ),
         );
       },
