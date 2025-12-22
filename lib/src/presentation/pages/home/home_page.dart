@@ -6,8 +6,8 @@ import 'package:holocron/src/presentation/bloc/character/character_event.dart';
 import 'package:holocron/src/presentation/bloc/favorites/favorites_bloc.dart';
 import 'package:holocron/src/presentation/bloc/favorites/favorites_event.dart';
 import 'package:holocron/src/presentation/bloc/favorites/favorites_state.dart';
-import 'package:holocron/src/presentation/widgets/custom_divider.dart';
 import '../../../domain/entities/character.dart';
+import '../../widgets/widgets.dart';
 import 'widgets/hero_section.dart';
 import 'widgets/character_card.dart';
 import 'widgets/load_more_button.dart';
@@ -143,3 +143,4 @@ class _CharactersGrid extends StatelessWidget {
     );
   }
 }
+

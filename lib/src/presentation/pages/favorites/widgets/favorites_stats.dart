@@ -77,7 +77,7 @@ class StatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground.withValues(alpha: 0.5),
+        color: AppTheme.cardBackground.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.white10),
       ),
@@ -104,7 +104,7 @@ class StatCard extends StatelessWidget {
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.0,
-                                color: Colors.white.withValues(alpha: 0.5),
+                                color: Colors.white.withOpacity(0.5),
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -112,9 +112,7 @@ class StatCard extends StatelessWidget {
                           Icon(
                             icon,
                             size: 16,
-                            color: AppTheme.terminalGreen.withValues(
-                              alpha: 0.5,
-                            ),
+                            color: AppTheme.terminalGreen.withOpacity(0.5),
                           ),
                         ],
                       ),
@@ -137,7 +135,7 @@ class StatCard extends StatelessWidget {
                                 valueSuffix!,
                                 style: AppTheme.bodyText.copyWith(
                                   fontSize: 14,
-                                  color: Colors.white.withValues(alpha: 0.3),
+                                  color: Colors.white.withOpacity(0.3),
                                 ),
                               ),
                             ),
@@ -150,8 +148,8 @@ class StatCard extends StatelessWidget {
                         style: AppTheme.bodyText.copyWith(
                           fontSize: 12,
                           color: title == 'TOTAL ENTRIES'
-                              ? AppTheme.terminalGreen.withValues(alpha: 0.7)
-                              : Colors.white.withValues(alpha: 0.3),
+                              ? AppTheme.terminalGreen.withOpacity(0.7)
+                              : Colors.white.withOpacity(0.3),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -167,3 +165,4 @@ class StatCard extends StatelessWidget {
     );
   }
 }
+

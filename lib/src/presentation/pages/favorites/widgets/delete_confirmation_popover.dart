@@ -35,15 +35,15 @@ class DeleteConfirmationPopover extends StatelessWidget {
           width: 290, // Slightly wider to ensure no truncation
           margin: const EdgeInsets.only(top: 4),
           decoration: BoxDecoration(
-            color: AppTheme.cardBackground.withValues(alpha: 0.98),
+            color: AppTheme.cardBackground.withOpacity(0.98),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: AppTheme.terminalGreen.withValues(alpha: 0.3),
+              color: AppTheme.terminalGreen.withOpacity(0.3),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.6),
+                color: Colors.black.withOpacity(0.6),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -82,7 +82,7 @@ class DeleteConfirmationPopover extends StatelessWidget {
                           visualDensity: VisualDensity.compact,
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          color: Colors.white.withValues(alpha: 0.4),
+                          color: Colors.white.withOpacity(0.4),
                         ),
                       ],
                     ),
@@ -91,7 +91,7 @@ class DeleteConfirmationPopover extends StatelessWidget {
                   Container(
                     height: 1,
                     width: double.infinity,
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: Colors.white.withOpacity(0.1),
                   ),
                   // Content with padding
                   Padding(
@@ -104,7 +104,7 @@ class DeleteConfirmationPopover extends StatelessWidget {
                           style: AppTheme.bodyText.copyWith(
                             fontSize: 12,
                             height: 1.5,
-                            color: Colors.white.withValues(alpha: 0.9),
+                            color: Colors.white.withOpacity(0.9),
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -114,7 +114,7 @@ class DeleteConfirmationPopover extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                             gradient: LinearGradient(
                               colors: [
-                                AppTheme.accentRed.withValues(alpha: 0.85),
+                                AppTheme.accentRed.withOpacity(0.85),
                                 AppTheme.accentRed,
                               ],
                             ),
@@ -154,3 +154,4 @@ class DeleteConfirmationPopover extends StatelessWidget {
     );
   }
 }
+

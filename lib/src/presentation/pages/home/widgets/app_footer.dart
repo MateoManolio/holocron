@@ -18,7 +18,7 @@ class AppFooter extends StatelessWidget {
         ),
         border: Border(
           top: BorderSide(
-            color: AppTheme.holoBlue.withValues(alpha: 0.2),
+            color: AppTheme.holoBlue.withOpacity(0.2),
             width: 1,
           ),
         ),
@@ -41,7 +41,7 @@ class AppFooter extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.imperialYellow.withValues(alpha: 0.2),
+                      color: AppTheme.imperialYellow.withOpacity(0.2),
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -71,7 +71,7 @@ class AppFooter extends StatelessWidget {
             'Your gateway to the Star Wars universe',
             style: AppTheme.bodyText.copyWith(
               fontSize: 14,
-              color: AppTheme.lightGray.withValues(alpha: 0.7),
+              color: AppTheme.lightGray.withOpacity(0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -84,7 +84,7 @@ class AppFooter extends StatelessWidget {
               gradient: LinearGradient(
                 colors: [
                   Colors.transparent,
-                  AppTheme.holoBlue.withValues(alpha: 0.5),
+                  AppTheme.holoBlue.withOpacity(0.5),
                   Colors.transparent,
                 ],
               ),
@@ -109,7 +109,7 @@ class AppFooter extends StatelessWidget {
             '© 2024 Holocron. All rights reserved.',
             style: AppTheme.caption.copyWith(
               fontSize: 11,
-              color: AppTheme.lightGray.withValues(alpha: 0.5),
+              color: AppTheme.lightGray.withOpacity(0.5),
             ),
           ),
           const SizedBox(height: 8),
@@ -118,7 +118,7 @@ class AppFooter extends StatelessWidget {
             'Star Wars and all associated names and characters are trademarks of Lucasfilm Ltd.',
             style: AppTheme.caption.copyWith(
               fontSize: 10,
-              color: AppTheme.lightGray.withValues(alpha: 0.4),
+              color: AppTheme.lightGray.withOpacity(0.4),
             ),
             textAlign: TextAlign.center,
           ),
@@ -154,7 +154,7 @@ class _FooterLinkState extends State<_FooterLink> {
             fontSize: 12,
             color: _isHovered
                 ? AppTheme.holoBlue
-                : AppTheme.lightGray.withValues(alpha: 0.6),
+                : AppTheme.lightGray.withOpacity(0.6),
             decoration: _isHovered ? TextDecoration.underline : null,
             decorationColor: AppTheme.holoBlue,
           ),
@@ -164,3 +164,4 @@ class _FooterLinkState extends State<_FooterLink> {
     );
   }
 }
+

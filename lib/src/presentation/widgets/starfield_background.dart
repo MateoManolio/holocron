@@ -52,7 +52,7 @@ class _StarfieldPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.6)
+      ..color = Colors.white.withOpacity(0.6)
       ..strokeWidth = 1.5;
 
     // Generar estrellas pseudo-aleatorias
@@ -77,3 +77,4 @@ class _StarfieldPainter extends CustomPainter {
     return oldDelegate.animation != animation;
   }
 }
+

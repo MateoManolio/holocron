@@ -55,7 +55,7 @@ class FavoritesHeader extends StatelessWidget {
                     Text(
                       'Access your secured collection of identified lifeforms. Data is encrypted and stored locally.',
                       style: AppTheme.bodyText.copyWith(
-                        color: Colors.white.withValues(alpha: 0.5),
+                        color: Colors.white.withOpacity(0.5),
                         fontSize: 14,
                       ),
                     ),
@@ -117,3 +117,4 @@ class FavoritesHeader extends StatelessWidget {
     context.read<FavoritesBloc>().add(ClearAllFavorites());
   }
 }
+

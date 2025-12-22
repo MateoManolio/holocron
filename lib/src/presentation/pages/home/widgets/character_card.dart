@@ -93,8 +93,8 @@ class _CharacterCardState extends State<CharacterCard>
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
                       color: _isHovered
-                          ? AppTheme.holoBlue.withValues(alpha: 0.5)
-                          : AppTheme.darkGray.withValues(alpha: 0.3),
+                          ? AppTheme.holoBlue.withOpacity(0.5)
+                          : AppTheme.darkGray.withOpacity(0.3),
                       width: 1.5,
                     ),
                     boxShadow: [
@@ -102,8 +102,8 @@ class _CharacterCardState extends State<CharacterCard>
                         color: widget.isFavorite
                             ? AppTheme.imperialYellow
                             : _isHovered
-                            ? AppTheme.holoBlue.withValues(alpha: 0.2)
-                            : Colors.black.withValues(alpha: 0.3),
+                            ? AppTheme.holoBlue.withOpacity(0.2)
+                            : Colors.black.withOpacity(0.3),
                         blurRadius: _isHovered ? 15 : 8,
                         spreadRadius: _isHovered ? 1 : 0,
                         offset: const Offset(0, 4),
@@ -124,7 +124,7 @@ class _CharacterCardState extends State<CharacterCard>
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     colors: [
-                                      AppTheme.darkGray.withValues(alpha: 0.3),
+                                      AppTheme.darkGray.withOpacity(0.3),
                                       AppTheme.cardBackground,
                                     ],
                                     begin: Alignment.topCenter,
@@ -139,8 +139,8 @@ class _CharacterCardState extends State<CharacterCard>
                                       child: Icon(
                                         Icons.person,
                                         size: 60,
-                                        color: AppTheme.lightGray.withValues(
-                                          alpha: 0.3,
+                                        color: AppTheme.lightGray.withOpacity(
+                                          0.3,
                                         ),
                                       ),
                                     );
@@ -160,7 +160,7 @@ class _CharacterCardState extends State<CharacterCard>
                                   gradient: LinearGradient(
                                     colors: [
                                       AppTheme.cardBackground,
-                                      AppTheme.darkGray.withValues(alpha: 0.8),
+                                      AppTheme.darkGray.withOpacity(0.8),
                                     ],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
@@ -190,23 +190,19 @@ class _CharacterCardState extends State<CharacterCard>
                             width: 36,
                             height: 36,
                             decoration: BoxDecoration(
-                              color: AppTheme.cardBackground.withValues(
-                                alpha: 0.9,
-                              ),
+                              color: AppTheme.cardBackground.withOpacity(0.9),
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: widget.isFavorite
                                     ? AppTheme.imperialYellow
-                                    : AppTheme.lightGray.withValues(alpha: 0.3),
+                                    : AppTheme.lightGray.withOpacity(0.3),
                                 width: 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
                                   color: widget.isFavorite
-                                      ? AppTheme.imperialYellow.withValues(
-                                          alpha: 0.3,
-                                        )
-                                      : Colors.black.withValues(alpha: 0.2),
+                                      ? AppTheme.imperialYellow.withOpacity(0.3)
+                                      : Colors.black.withOpacity(0.2),
                                   blurRadius: 8,
                                   spreadRadius: 1,
                                 ),
@@ -218,7 +214,7 @@ class _CharacterCardState extends State<CharacterCard>
                                   : Icons.favorite_border,
                               color: widget.isFavorite
                                   ? AppTheme.imperialYellow
-                                  : AppTheme.lightGray.withValues(alpha: 0.6),
+                                  : AppTheme.lightGray.withOpacity(0.6),
                               size: 18,
                             ),
                           ),
@@ -259,16 +255,11 @@ class BorderSpillPainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..strokeCap = StrokeCap.round;
 
-    // Start point: Top-right corner (end of top straight segment)
     final double halfStroke = strokeWidth / 2;
     final double inset = halfStroke;
 
     final path = Path();
-
-    // Start at top-right (end of top line, start of top-right arc)
     path.moveTo(size.width - borderRadius, inset);
-
-    // Top-right arc
     path.arcTo(
       Rect.fromLTWH(
         size.width - 2 * borderRadius + inset,
@@ -280,11 +271,7 @@ class BorderSpillPainter extends CustomPainter {
       math.pi / 2,
       false,
     );
-
-    // Right side
     path.lineTo(size.width - inset, size.height - borderRadius);
-
-    // Bottom-right arc
     path.arcTo(
       Rect.fromLTWH(
         size.width - 2 * borderRadius + inset,
@@ -296,11 +283,7 @@ class BorderSpillPainter extends CustomPainter {
       math.pi / 2,
       false,
     );
-
-    // Bottom side
     path.lineTo(borderRadius, size.height - inset);
-
-    // Bottom-left arc
     path.arcTo(
       Rect.fromLTWH(
         inset,
@@ -312,11 +295,7 @@ class BorderSpillPainter extends CustomPainter {
       math.pi / 2,
       false,
     );
-
-    // Left side
     path.lineTo(inset, borderRadius);
-
-    // Top-left arc
     path.arcTo(
       Rect.fromLTWH(
         inset,
@@ -328,8 +307,6 @@ class BorderSpillPainter extends CustomPainter {
       math.pi / 2,
       false,
     );
-
-    // Top side
     path.lineTo(size.width - borderRadius, inset);
 
     final pathMetrics = path.computeMetrics().first;
@@ -348,3 +325,4 @@ class BorderSpillPainter extends CustomPainter {
     return oldDelegate.progress != progress || oldDelegate.color != color;
   }
 }
+

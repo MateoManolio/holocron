@@ -35,7 +35,7 @@ class _ResultsHeaderState extends State<ResultsHeader> {
                 text: TextSpan(
                   style: AppTheme.bodyText.copyWith(
                     fontSize: 14,
-                    color: AppTheme.lightGray.withValues(alpha: 0.7),
+                    color: AppTheme.lightGray.withOpacity(0.7),
                   ),
                   children: [
                     const TextSpan(text: 'Showing '),
@@ -58,22 +58,22 @@ class _ResultsHeaderState extends State<ResultsHeader> {
                     'Sort by: ',
                     style: AppTheme.bodyText.copyWith(
                       fontSize: 14,
-                      color: AppTheme.lightGray.withValues(alpha: 0.7),
+                      color: AppTheme.lightGray.withOpacity(0.7),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: AppTheme.cardBackground.withValues(alpha: 0.8),
+                      color: AppTheme.cardBackground.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(25),
                       border: Border.all(
-                        color: AppTheme.holoBlue.withValues(alpha: 0.1),
+                        color: AppTheme.holoBlue.withOpacity(0.1),
                         width: 1.5,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.holoBlue.withValues(alpha: 0.03),
+                          color: AppTheme.holoBlue.withOpacity(0.03),
                           blurRadius: 15,
                           spreadRadius: 0,
                         ),
@@ -137,3 +137,4 @@ class _ResultsHeaderState extends State<ResultsHeader> {
     );
   }
 }
+

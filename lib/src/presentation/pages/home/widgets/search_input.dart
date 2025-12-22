@@ -95,13 +95,13 @@ class _SearchInputState extends State<SearchInput> {
                 border: Border.all(
                   color: _isFocused
                       ? AppTheme.holoBlue
-                      : AppTheme.darkGray.withValues(alpha: 0.5),
+                      : AppTheme.darkGray.withOpacity(0.5),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: _isFocused
-                        ? AppTheme.holoBlue.withValues(alpha: 0.2)
+                        ? AppTheme.holoBlue.withOpacity(0.2)
                         : Colors.transparent,
                     blurRadius: _isFocused ? 12 : 0,
                     spreadRadius: _isFocused ? 2 : 0,
@@ -119,14 +119,14 @@ class _SearchInputState extends State<SearchInput> {
                 decoration: InputDecoration(
                   hintText: 'Search by name...',
                   hintStyle: AppTheme.bodyText.copyWith(
-                    color: AppTheme.lightGray.withValues(alpha: 0.4),
+                    color: AppTheme.lightGray.withOpacity(0.4),
                     fontSize: 15,
                   ),
                   prefixIcon: Icon(
                     Icons.search,
                     color: _isFocused
                         ? AppTheme.holoBlue
-                        : AppTheme.lightGray.withValues(alpha: 0.5),
+                        : AppTheme.lightGray.withOpacity(0.5),
                     size: 22,
                   ),
                   suffixIcon: IconButton(
@@ -134,7 +134,7 @@ class _SearchInputState extends State<SearchInput> {
                       Icons.tune,
                       color: _overlayController.isShowing
                           ? AppTheme.holoBlue
-                          : AppTheme.lightGray.withValues(alpha: 0.5),
+                          : AppTheme.lightGray.withOpacity(0.5),
                       size: 22,
                     ),
                     onPressed: () {
@@ -156,3 +156,4 @@ class _SearchInputState extends State<SearchInput> {
     );
   }
 }
+

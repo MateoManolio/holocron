@@ -75,20 +75,20 @@ class _FilterPopoverState extends State<FilterPopover> {
           margin: const EdgeInsets.only(top: 8),
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: AppTheme.cardBackground.withValues(alpha: 0.9),
+            color: AppTheme.cardBackground.withOpacity(0.9),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(
-              color: AppTheme.holoBlue.withValues(alpha: 0.2),
+              color: AppTheme.holoBlue.withOpacity(0.2),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.5),
+                color: Colors.black.withOpacity(0.5),
                 blurRadius: 30,
                 offset: const Offset(0, 15),
               ),
               BoxShadow(
-                color: AppTheme.holoBlue.withValues(alpha: 0.1),
+                color: AppTheme.holoBlue.withOpacity(0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 0),
               ),
@@ -119,7 +119,7 @@ class _FilterPopoverState extends State<FilterPopover> {
                         onPressed: widget.onClose,
                         icon: const Icon(Icons.close, size: 18),
                         visualDensity: VisualDensity.compact,
-                        color: AppTheme.lightGray.withValues(alpha: 0.6),
+                        color: AppTheme.lightGray.withOpacity(0.6),
                       ),
                     ],
                   ),
@@ -173,7 +173,7 @@ class _FilterPopoverState extends State<FilterPopover> {
                             gradient: LinearGradient(
                               colors: [
                                 AppTheme.holoBlue,
-                                AppTheme.holoBlue.withValues(alpha: 0.7),
+                                AppTheme.holoBlue.withOpacity(0.7),
                               ],
                             ),
                           ),
@@ -228,7 +228,7 @@ class _FilterPopoverState extends State<FilterPopover> {
         Text(
           title,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.4),
+            color: Colors.white.withOpacity(0.4),
             fontSize: 10,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
@@ -250,8 +250,8 @@ class _FilterPopoverState extends State<FilterPopover> {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppTheme.holoBlue.withValues(alpha: 0.15)
-                      : Colors.white.withValues(alpha: 0.05),
+                      ? AppTheme.holoBlue.withOpacity(0.15)
+                      : Colors.white.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isSelected ? AppTheme.holoBlue : Colors.white12,
@@ -276,3 +276,4 @@ class _FilterPopoverState extends State<FilterPopover> {
     );
   }
 }
+

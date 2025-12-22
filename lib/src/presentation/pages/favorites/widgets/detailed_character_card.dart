@@ -30,9 +30,11 @@ class DetailedCharacterCard extends StatelessWidget {
     this.onDelete,
   });
 
-  void _showDeleteConfirmation(BuildContext context, GlobalKey buttonKey) {
-    final RenderBox? renderBox =
-        buttonKey.currentContext?.findRenderObject() as RenderBox?;
+  void _showDeleteConfirmation(
+    BuildContext context,
+    BuildContext buttonContext,
+  ) {
+    final RenderBox? renderBox = buttonContext.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
     final offset = renderBox.localToGlobal(Offset.zero);
@@ -69,9 +71,12 @@ class DetailedCharacterCard extends StatelessWidget {
               characterName: name,
               onDelete: () {
                 onDelete?.call();
-                overlayEntry.remove();
               },
-              onClose: () => overlayEntry.remove(),
+              onClose: () {
+                if (overlayEntry.mounted) {
+                  overlayEntry.remove();
+                }
+              },
             ),
           ),
         ],
@@ -83,23 +88,20 @@ class DetailedCharacterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey deleteButtonKey = GlobalKey();
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground.withValues(alpha: 0.4),
+        color: AppTheme.cardBackground.withOpacity(0.4),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme.imperialYellow.withValues(
-            alpha: 0.5,
+          color: AppTheme.imperialYellow.withOpacity(
+            0.5,
           ), // Vibrant yellow border
           width: 1.5, // Thicker border
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.imperialYellow.withValues(
-              alpha: 0.2,
-            ), // Noticeable glow
+            color: AppTheme.imperialYellow.withOpacity(0.2), // Noticeable glow
             blurRadius: 15,
             spreadRadius: 1,
           ),
@@ -129,7 +131,7 @@ class DetailedCharacterCard extends StatelessWidget {
                           child: Icon(
                             Icons.person,
                             size: 40,
-                            color: AppTheme.lightGray.withValues(alpha: 0.3),
+                            color: AppTheme.lightGray.withOpacity(0.3),
                           ),
                         ),
                       );
@@ -144,7 +146,7 @@ class DetailedCharacterCard extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        AppTheme.cardBackground.withValues(alpha: 0.8),
+                        AppTheme.cardBackground.withOpacity(0.8),
                       ],
                     ),
                   ),
@@ -154,23 +156,24 @@ class DetailedCharacterCard extends StatelessWidget {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: Material(
-                    key: deleteButtonKey,
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () =>
-                          _showDeleteConfirmation(context, deleteButtonKey),
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: const BoxDecoration(
-                          color: Colors.black26,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.close_rounded,
-                          color: Colors.white.withValues(alpha: 0.6),
-                          size: 16,
+                  child: Builder(
+                    builder: (buttonContext) => Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () =>
+                            _showDeleteConfirmation(context, buttonContext),
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            color: Colors.black26,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.close_rounded,
+                            color: Colors.white.withOpacity(0.3),
+                            size: 16,
+                          ),
                         ),
                       ),
                     ),
@@ -230,7 +233,7 @@ class DetailedCharacterCard extends StatelessWidget {
                         Text(
                           'AFFILIATIONS',
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.3),
+                            color: Colors.white.withOpacity(0.3),
                             fontSize: 8,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.5,
@@ -336,13 +339,13 @@ class _Tag extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
       decoration: BoxDecoration(
         color: isPrimary
-            ? AppTheme.terminalGreen.withValues(alpha: 0.1)
-            : Colors.white.withValues(alpha: 0.05),
+            ? AppTheme.terminalGreen.withOpacity(0.1)
+            : Colors.white.withOpacity(0.05),
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
           color: isPrimary
-              ? AppTheme.terminalGreen.withValues(alpha: 0.3)
-              : Colors.white.withValues(alpha: 0.1),
+              ? AppTheme.terminalGreen.withOpacity(0.3)
+              : Colors.white.withOpacity(0.1),
         ),
       ),
       child: Text(
@@ -371,7 +374,7 @@ class _MetadataRow extends StatelessWidget {
         Text(
           label,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: Colors.white.withOpacity(0.3),
             fontSize: 8,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,

@@ -38,7 +38,7 @@ class _FavoritesSortButtonState extends State<FavoritesSortButton> {
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.terminalGreen.withValues(alpha: 0.2),
+                  color: AppTheme.terminalGreen.withOpacity(0.2),
                   blurRadius: 10,
                   spreadRadius: 1,
                 ),
@@ -93,3 +93,4 @@ class _FavoritesSortButtonState extends State<FavoritesSortButton> {
     );
   }
 }
+

@@ -59,12 +59,12 @@ class _LoadMoreButtonState extends State<LoadMoreButton>
                 gradient: LinearGradient(
                   colors: _isHovered
                       ? [
-                          AppTheme.holoBlue.withValues(alpha: 0.8),
-                          AppTheme.holoBlue.withValues(alpha: 0.6),
+                          AppTheme.holoBlue.withOpacity(0.8),
+                          AppTheme.holoBlue.withOpacity(0.6),
                         ]
                       : [
-                          AppTheme.holoBlue.withValues(alpha: 0.2),
-                          AppTheme.holoBlue.withValues(alpha: 0.1),
+                          AppTheme.holoBlue.withOpacity(0.2),
+                          AppTheme.holoBlue.withOpacity(0.1),
                         ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -73,14 +73,14 @@ class _LoadMoreButtonState extends State<LoadMoreButton>
                 border: Border.all(
                   color: _isHovered
                       ? AppTheme.holoBlue
-                      : AppTheme.holoBlue.withValues(alpha: 0.5),
+                      : AppTheme.holoBlue.withOpacity(0.5),
                   width: 2,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: _isHovered
-                        ? AppTheme.holoBlue.withValues(alpha: 0.3)
-                        : AppTheme.holoBlue.withValues(alpha: 0.1),
+                        ? AppTheme.holoBlue.withOpacity(0.3)
+                        : AppTheme.holoBlue.withOpacity(0.1),
                     blurRadius: _isHovered ? 15 : 8,
                     spreadRadius: _isHovered ? 2 : 0,
                   ),
@@ -105,7 +105,7 @@ class _LoadMoreButtonState extends State<LoadMoreButton>
                       Icons.refresh,
                       color: _isHovered
                           ? AppTheme.holoBlue
-                          : AppTheme.holoBlue.withValues(alpha: 0.8),
+                          : AppTheme.holoBlue.withOpacity(0.8),
                       size: 20,
                     ),
                   const SizedBox(width: 12),
@@ -114,7 +114,7 @@ class _LoadMoreButtonState extends State<LoadMoreButton>
                     style: AppTheme.caption.copyWith(
                       color: _isHovered
                           ? AppTheme.holoBlue
-                          : AppTheme.holoBlue.withValues(alpha: 0.8),
+                          : AppTheme.holoBlue.withOpacity(0.8),
                       fontWeight: FontWeight.bold,
                       fontSize: 13,
                       letterSpacing: 1.5,
@@ -129,3 +129,4 @@ class _LoadMoreButtonState extends State<LoadMoreButton>
     );
   }
 }
+
