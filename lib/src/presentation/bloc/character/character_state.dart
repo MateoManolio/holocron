@@ -76,3 +76,4 @@ class CharacterError extends CharacterState {
   @override
   List<Object?> get props => [message];
 }
+

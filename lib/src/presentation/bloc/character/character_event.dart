@@ -43,3 +43,4 @@ class SortCharacters extends CharacterEvent {
   @override
   List<Object?> get props => [sortOption];
 }
+

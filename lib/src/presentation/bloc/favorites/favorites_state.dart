@@ -37,3 +37,4 @@ class FavoritesError extends FavoritesState {
   @override
   List<Object?> get props => [message];
 }
+

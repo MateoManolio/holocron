@@ -124,3 +124,4 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     return sorted;
   }
 }
+

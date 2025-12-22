@@ -38,3 +38,4 @@ class SortFavorites extends FavoritesEvent {
 }
 
 class ClearAllFavorites extends FavoritesEvent {}
+

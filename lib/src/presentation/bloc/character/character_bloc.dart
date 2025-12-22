@@ -225,3 +225,4 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         .replaceAll('ServerException: ', '');
   }
 }
+
