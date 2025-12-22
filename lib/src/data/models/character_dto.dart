@@ -46,27 +46,27 @@ class CharacterDto {
   });
 
   factory CharacterDto.fromJson(Map<String, dynamic> json) {
-    List<String> _parseList(dynamic value) {
+    List<String> parseList(dynamic value) {
       if (value == null) return const [];
       if (value is List) return List<String>.from(value);
       if (value is String) return [value];
       return const [];
     }
 
-    String? _parseString(dynamic value) {
+    String? parseString(dynamic value) {
       if (value == null) return null;
       if (value is String) return value;
       if (value is List) return value.join(', ');
       return value.toString();
     }
 
-    int? _parseInt(dynamic value) {
+    int? parseInt(dynamic value) {
       if (value is num) return value.toInt();
       if (value is String) return int.tryParse(value);
       return null;
     }
 
-    double? _parseDouble(dynamic value) {
+    double? parseDouble(dynamic value) {
       if (value is num) return value.toDouble();
       if (value is String) return double.tryParse(value);
       return null;
@@ -75,25 +75,25 @@ class CharacterDto {
     return CharacterDto(
       id: json['id'] as int,
       name: json['name'] as String,
-      height: _parseDouble(json['height']),
-      mass: _parseInt(json['mass']),
-      gender: _parseString(json['gender']),
-      homeworld: _parseString(json['homeworld']),
-      wiki: _parseString(json['wiki']),
-      image: _parseString(json['image']),
-      born: _parseInt(json['born']),
-      bornLocation: _parseString(json['bornLocation']),
-      died: _parseInt(json['died']),
-      diedLocation: _parseString(json['diedLocation']),
-      species: _parseString(json['species']),
-      hairColor: _parseString(json['hairColor']),
-      eyeColor: _parseString(json['eyeColor']),
-      skinColor: _parseString(json['skinColor']),
-      cybernetics: _parseString(json['cybernetics']),
-      affiliations: _parseList(json['affiliations']),
-      masters: _parseList(json['masters']),
-      apprentices: _parseList(json['apprentices']),
-      formerAffiliations: _parseList(json['formerAffiliations']),
+      height: parseDouble(json['height']),
+      mass: parseInt(json['mass']),
+      gender: parseString(json['gender']),
+      homeworld: parseString(json['homeworld']),
+      wiki: parseString(json['wiki']),
+      image: parseString(json['image']),
+      born: parseInt(json['born']),
+      bornLocation: parseString(json['bornLocation']),
+      died: parseInt(json['died']),
+      diedLocation: parseString(json['diedLocation']),
+      species: parseString(json['species']),
+      hairColor: parseString(json['hairColor']),
+      eyeColor: parseString(json['eyeColor']),
+      skinColor: parseString(json['skinColor']),
+      cybernetics: parseString(json['cybernetics']),
+      affiliations: parseList(json['affiliations']),
+      masters: parseList(json['masters']),
+      apprentices: parseList(json['apprentices']),
+      formerAffiliations: parseList(json['formerAffiliations']),
     );
   }
 
