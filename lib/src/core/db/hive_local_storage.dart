@@ -36,3 +36,4 @@ class HiveLocalStorage implements ILocalStorage {
     await Hive.close();
   }
 }
+

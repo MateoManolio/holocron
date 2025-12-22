@@ -5,3 +5,4 @@ abstract class IUseCaseQuery<T, P> {
 abstract class IUseCaseCommand<T> {
   Future<T> call();
 }
+

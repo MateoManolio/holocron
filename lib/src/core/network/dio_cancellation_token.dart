@@ -14,3 +14,4 @@ class DioCancellationToken implements AppCancellationToken {
   @override
   CancelToken get token => _cancelToken;
 }
+

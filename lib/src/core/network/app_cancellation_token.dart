@@ -30,3 +30,4 @@ class DefaultAppCancellationToken implements AppCancellationToken {
 
   String? get reason => _reason;
 }
+

@@ -17,3 +17,4 @@ abstract interface class ILocalStorage {
   /// Closes the storage service.
   Future<void> close();
 }
+

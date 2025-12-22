@@ -25,3 +25,4 @@ class RequestCancelledException implements Exception {
   @override
   String toString() => 'RequestCancelledException: $message';
 }
+
