@@ -12,3 +12,4 @@ class GetCharactersUseCase implements IUseCaseCommand<List<Character>> {
     return _repository.getCharacters();
   }
 }
+

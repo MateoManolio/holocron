@@ -12,3 +12,4 @@ class AddFavoriteUseCase implements IUseCaseQuery<void, Character> {
     return _repository.addFavorite(character);
   }
 }
+

@@ -11,3 +11,4 @@ class IsFavoriteUseCase implements IUseCaseQuery<bool, String> {
     return _repository.isFavorite(id);
   }
 }
+

@@ -9,3 +9,4 @@ class ClearFavoritesUseCase {
     return _repository.clearFavorites();
   }
 }
+

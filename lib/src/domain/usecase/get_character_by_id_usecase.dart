@@ -12,3 +12,4 @@ class GetCharacterByIdUseCase implements IUseCaseQuery<Character?, String> {
     return _repository.getCharacterById(id);
   }
 }
+

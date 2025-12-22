@@ -45,3 +45,4 @@ class SwapiService implements ISwapiService {
     }
   }
 }
+

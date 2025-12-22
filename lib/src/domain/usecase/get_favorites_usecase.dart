@@ -12,3 +12,4 @@ class GetFavoritesUseCase implements IUseCaseCommand<List<Character>> {
     return _repository.getFavorites();
   }
 }
+

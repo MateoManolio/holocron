@@ -45,3 +45,4 @@ class Character {
     this.formerAffiliations = const [],
   });
 }
+

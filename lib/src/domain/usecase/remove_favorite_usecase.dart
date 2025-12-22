@@ -11,3 +11,4 @@ class RemoveFavoriteUseCase implements IUseCaseQuery<void, String> {
     return _repository.removeFavorite(id);
   }
 }
+

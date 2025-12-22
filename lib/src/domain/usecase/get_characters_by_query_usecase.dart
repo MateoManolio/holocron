@@ -13,3 +13,4 @@ class GetCharactersByQueryUseCase
     return _repository.getCharactersByQuery(query);
   }
 }
+
