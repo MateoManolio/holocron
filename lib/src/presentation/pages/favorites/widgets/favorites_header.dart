@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../config/theme/app_theme.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../presentation/bloc/favorites/favorites_bloc.dart';
+import '../../../../presentation/bloc/favorites/favorites_event.dart';
 import 'clear_cache_button.dart';
 
 class FavoritesHeader extends StatelessWidget {
@@ -60,7 +63,47 @@ class FavoritesHeader extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              const ClearCacheButton(),
+              const SizedBox(width: 16),
+              ClearCacheButton(
+                onPressed: () {
+                  // Show confirmation dialog before clearing
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      backgroundColor: AppTheme.cardBackground,
+                      title: Text(
+                        'Clear Database',
+                        style: AppTheme.heading1.copyWith(fontSize: 20),
+                      ),
+                      content: Text(
+                        'This will delete all saved characters from your local database. This action cannot be undone.',
+                        style: AppTheme.bodyText,
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            // Trigger clear event
+                            // context.read<FavoritesBloc>().add(ClearAllFavorites());
+                            // Need to import FavoritesBloc and Event.
+                            // However, using context inside a stateless widget is fine.
+                            // But I need to ensure imports are present.
+                            Navigator.pop(context); // Close dialog
+                            _clearFavorites(context);
+                          },
+                          child: const Text(
+                            'Clear All',
+                            style: TextStyle(color: Colors.redAccent),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           const SizedBox(height: 24),
@@ -68,5 +111,9 @@ class FavoritesHeader extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _clearFavorites(BuildContext context) {
+    context.read<FavoritesBloc>().add(ClearAllFavorites());
   }
 }

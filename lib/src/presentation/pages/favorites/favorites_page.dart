@@ -4,6 +4,7 @@ import 'package:holocron/src/presentation/bloc/favorites/favorites_bloc.dart';
 import 'package:holocron/src/presentation/bloc/favorites/favorites_state.dart';
 import 'package:holocron/src/presentation/bloc/favorites/favorites_event.dart';
 import 'widgets/detailed_character_card.dart';
+import '../../../core/util/responsive_utils.dart';
 import 'widgets/favorites_header.dart';
 import 'widgets/favorites_sort_button.dart';
 import 'widgets/favorites_stats.dart';
@@ -67,31 +68,13 @@ class FavoritesPage extends StatelessWidget {
                     : Builder(
                         builder: (context) {
                           final width = MediaQuery.of(context).size.width;
-                          int crossAxisCount;
-                          double horizontalPadding;
-                          double childAspectRatio;
-
-                          if (width < 600) {
-                            crossAxisCount = 2; // Mobile
-                            horizontalPadding = 16;
-                            childAspectRatio = 0.46;
-                          } else if (width < 900) {
-                            crossAxisCount = 3; // Tablet small
-                            horizontalPadding = 24;
-                            childAspectRatio = 0.52;
-                          } else if (width < 1200) {
-                            crossAxisCount = 4; // Tablet large / Laptop
-                            horizontalPadding = 32;
-                            childAspectRatio = 0.54;
-                          } else if (width < 1600) {
-                            crossAxisCount = 5; // Desktop
-                            horizontalPadding = 48;
-                            childAspectRatio = 0.54;
-                          } else {
-                            crossAxisCount = 6; // Ultra wide
-                            horizontalPadding = 80;
-                            childAspectRatio = 0.54;
-                          }
+                          final config = ResponsiveUtils.getGridConfig(
+                            width,
+                            isDetailed: true,
+                          );
+                          final crossAxisCount = config.crossAxisCount;
+                          final horizontalPadding = config.horizontalPadding;
+                          final childAspectRatio = config.childAspectRatio;
 
                           return Padding(
                             padding: EdgeInsets.symmetric(
