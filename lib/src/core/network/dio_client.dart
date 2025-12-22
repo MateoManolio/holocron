@@ -1,19 +1,17 @@
 import 'package:dio/dio.dart';
 import '../error/exceptions.dart';
+import 'app_cancellation_token.dart';
 
 class DioClient {
   final Dio _dio;
 
   DioClient(this._dio) {
     _dio
-      ..options.baseUrl = 'https://swapi.dev/api/'
+      ..options.baseUrl =
+          'https://cdn.jsdelivr.net/gh/akabab/starwars-api@0.2.1/api/'
       ..options.connectTimeout = const Duration(seconds: 15)
       ..options.receiveTimeout = const Duration(seconds: 15)
-      ..options.responseType = ResponseType.json
-      ..options.headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      };
+      ..options.responseType = ResponseType.json;
 
     _dio.interceptors.addAll([
       _getErrorInterceptor(),
@@ -34,15 +32,24 @@ class DioClient {
     String url, {
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
+    AppCancellationToken? cancelToken,
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
+      // Evitar CORS cache y preflight simple
+      final cleanOptions = options ?? Options();
+      cleanOptions.headers = {}; // Forzar headers vacíos
+
+      // Cache busting para evitar que el navegador use políticas CORS viejas
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final separator = url.contains('?') ? '&' : '?';
+      final finalUrl = '$url${separator}t=$timestamp';
+
       final Response response = await _dio.get(
-        url,
+        finalUrl,
         queryParameters: queryParameters,
-        options: options,
-        cancelToken: cancelToken,
+        options: cleanOptions,
+        cancelToken: cancelToken?.token as CancelToken?,
         onReceiveProgress: onReceiveProgress,
       );
       return response;
@@ -58,7 +65,7 @@ class DioClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
+    AppCancellationToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
@@ -68,7 +75,7 @@ class DioClient {
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
+        cancelToken: cancelToken?.token as CancelToken?,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
@@ -85,7 +92,7 @@ class DioClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
+    AppCancellationToken? cancelToken,
     ProgressCallback? onSendProgress,
     ProgressCallback? onReceiveProgress,
   }) async {
@@ -95,7 +102,7 @@ class DioClient {
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
+        cancelToken: cancelToken?.token as CancelToken?,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,
       );
@@ -112,7 +119,7 @@ class DioClient {
     dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
-    CancelToken? cancelToken,
+    AppCancellationToken? cancelToken,
   }) async {
     try {
       final Response response = await _dio.delete(
@@ -120,7 +127,7 @@ class DioClient {
         data: data,
         queryParameters: queryParameters,
         options: options,
-        cancelToken: cancelToken,
+        cancelToken: cancelToken?.token as CancelToken?,
       );
       return response;
     } on DioException catch (e) {
@@ -150,7 +157,9 @@ class DioClient {
       case DioExceptionType.cancel:
         return RequestCancelledException(message: 'Request was cancelled');
       case DioExceptionType.connectionError:
-        return NetworkException(message: 'No internet connection');
+        return NetworkException(
+          message: 'No internet connection: ${e.message}',
+        );
       default:
         return ServerException(message: 'Something went wrong: ${e.message}');
     }
