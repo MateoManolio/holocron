@@ -85,6 +85,7 @@ class DetailedCharacterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final GlobalKey deleteButtonKey = GlobalKey();
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: AppTheme.cardBackground.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(12),
@@ -116,7 +117,7 @@ class DetailedCharacterCard extends StatelessWidget {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(12),
                   ),
-                  child: Image.asset(
+                  child: Image.network(
                     imagePath,
                     width: double.infinity,
                     height: double.infinity,
@@ -180,109 +181,144 @@ class DetailedCharacterCard extends StatelessWidget {
           ),
 
           // Content Section
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    name.toUpperCase(),
-                    style: AppTheme.heading3.copyWith(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Wrap(
-                    spacing: 4,
-                    runSpacing: 4,
+          Flexible(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(12),
+              ),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _Tag(label: species.toUpperCase(), isPrimary: true),
-                      _Tag(label: gender.toUpperCase()),
-                    ],
-                  ),
-                  const Spacer(),
-                  const Divider(color: Colors.white10, height: 1),
-                  const SizedBox(height: 8),
+                      Text(
+                        name.toUpperCase(),
+                        style: AppTheme.heading3.copyWith(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.visible,
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: [
+                          _Tag(label: species.toUpperCase(), isPrimary: true),
+                          _Tag(label: gender.toUpperCase()),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      const Divider(color: Colors.white10, height: 1),
+                      const SizedBox(height: 12),
 
-                  // Metadata rows
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _MetadataRow(
-                          label: 'HOMEWORLD',
-                          value: homeworld,
-                        ),
+                      // Metadata grid
+                      _MetadataGrid(
+                        homeworld: homeworld,
+                        birthYear: birthYear,
+                        height: height,
+                        eyeColor: eyeColor,
+                        mass: mass,
                       ),
-                      Expanded(
-                        child: _MetadataRow(
-                          label: 'BIRTH YEAR',
-                          value: birthYear,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _MetadataRow(
-                          label: 'HEIGHT',
-                          value: height != null ? '${height}cm' : 'UNKNOWN',
-                        ),
-                      ),
-                      Expanded(
-                        child: _MetadataRow(
-                          label: 'EYE COLOR',
-                          value: eyeColor?.toUpperCase() ?? 'UNKNOWN',
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _MetadataRow(
-                          label: 'MASS',
-                          value: mass != null ? '${mass}kg' : 'UNKNOWN',
-                        ),
-                      ),
-                      const Spacer(),
-                    ],
-                  ),
 
-                  if (affiliations.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      'AFFILIATIONS',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        fontSize: 8,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: affiliations
-                          .take(2)
-                          .map((a) => _Tag(label: a.toUpperCase(), fontSize: 8))
-                          .toList(),
-                    ),
-                  ],
-                ],
+                      if (affiliations.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          'AFFILIATIONS',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.3),
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Wrap(
+                          spacing: 4,
+                          runSpacing: 4,
+                          children: affiliations
+                              .map(
+                                (a) =>
+                                    _Tag(label: a.toUpperCase(), fontSize: 8),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _MetadataGrid extends StatelessWidget {
+  final String homeworld;
+  final String birthYear;
+  final int? height;
+  final String? eyeColor;
+  final String? mass;
+
+  const _MetadataGrid({
+    required this.homeworld,
+    required this.birthYear,
+    this.height,
+    this.eyeColor,
+    this.mass,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _MetadataRow(label: 'HOMEWORLD', value: homeworld),
+            ),
+            Expanded(
+              child: _MetadataRow(label: 'BIRTH YEAR', value: birthYear),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _MetadataRow(
+                label: 'HEIGHT',
+                value: height != null ? '${height}cm' : 'UNKNOWN',
+              ),
+            ),
+            Expanded(
+              child: _MetadataRow(
+                label: 'EYE COLOR',
+                value: eyeColor?.toUpperCase() ?? 'UNKNOWN',
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: _MetadataRow(
+                label: 'MASS',
+                value: mass != null ? '${mass}kg' : 'UNKNOWN',
+              ),
+            ),
+            const Expanded(child: SizedBox()),
+          ],
+        ),
+      ],
     );
   }
 }

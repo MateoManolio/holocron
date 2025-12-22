@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../config/theme/app_theme.dart';
 import 'filter_popover.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:holocron/src/presentation/bloc/character/character_bloc.dart';
+import 'package:holocron/src/presentation/bloc/character/character_event.dart';
 
 class SearchInput extends StatefulWidget {
   const SearchInput({super.key});
@@ -23,7 +26,6 @@ class _SearchInputState extends State<SearchInput> {
         overlayChildBuilder: (context) {
           return Stack(
             children: [
-              // Detector para cerrar al hacer clic afuera
               GestureDetector(
                 onTap: () {
                   _overlayController.hide();
@@ -32,7 +34,6 @@ class _SearchInputState extends State<SearchInput> {
                 behavior: HitTestBehavior.translucent,
                 child: Container(color: Colors.transparent),
               ),
-              // El modal posicionado relativo a la barra de búsqueda
               CompositedTransformFollower(
                 link: _layerLink,
                 targetAnchor: Alignment.bottomRight,
@@ -85,6 +86,9 @@ class _SearchInputState extends State<SearchInput> {
                   color: Colors.white,
                   fontSize: 15,
                 ),
+                onChanged: (value) {
+                  context.read<CharacterBloc>().add(SearchCharacters(value));
+                },
                 decoration: InputDecoration(
                   hintText: 'Search by name...',
                   hintStyle: AppTheme.bodyText.copyWith(

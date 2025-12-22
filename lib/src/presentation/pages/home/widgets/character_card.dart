@@ -87,6 +87,7 @@ class _CharacterCardState extends State<CharacterCard>
                   strokeWidth: 2.5,
                 ),
                 child: Container(
+                  clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
                     color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(16),
@@ -129,7 +130,7 @@ class _CharacterCardState extends State<CharacterCard>
                                     end: Alignment.bottomCenter,
                                   ),
                                 ),
-                                child: Image.asset(
+                                child: Image.network(
                                   widget.imagePath,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
