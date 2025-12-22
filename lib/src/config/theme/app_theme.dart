@@ -57,7 +57,6 @@ abstract class AppTheme {
       primary: imperialYellow,
       secondary: holoBlue,
       surface: darkGray,
-      background: spaceBlack,
       error: accentRed,
     ),
     cardTheme: const CardThemeData(
