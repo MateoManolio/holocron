@@ -117,7 +117,8 @@ class _CharacterCardState extends State<CharacterCard>
                         // Character image
                         Column(
                           children: [
-                            Expanded(
+                            AspectRatio(
+                              aspectRatio: 1,
                               child: Container(
                                 width: double.infinity,
                                 decoration: BoxDecoration(
@@ -148,28 +149,35 @@ class _CharacterCardState extends State<CharacterCard>
                               ),
                             ),
                             // Character name
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    AppTheme.cardBackground,
-                                    AppTheme.darkGray.withValues(alpha: 0.8),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
+                            Expanded(
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
                                 ),
-                              ),
-                              child: Text(
-                                widget.name,
-                                style: AppTheme.heading3.copyWith(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      AppTheme.cardBackground,
+                                      AppTheme.darkGray.withValues(alpha: 0.8),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                                child: Center(
+                                  child: Text(
+                                    widget.name,
+                                    style: AppTheme.heading3.copyWith(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ),
                             ),
                           ],

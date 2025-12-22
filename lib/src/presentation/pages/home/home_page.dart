@@ -13,6 +13,7 @@ import 'widgets/character_card.dart';
 import 'widgets/load_more_button.dart';
 import 'widgets/app_footer.dart';
 import 'widgets/results_header.dart';
+import '../../../core/util/responsive_utils.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -84,27 +85,10 @@ class _CharactersGrid extends StatelessWidget {
             : <int>{};
 
         final width = MediaQuery.of(context).size.width;
-        int crossAxisCount;
-        double horizontalPadding;
-
-        if (width < 600) {
-          crossAxisCount = 2; // Mobile
-          horizontalPadding = 16;
-        } else if (width < 900) {
-          crossAxisCount = 3; // Tablet small
-          horizontalPadding = 24;
-        } else if (width < 1200) {
-          crossAxisCount = 4; // Tablet large / Laptop
-          horizontalPadding = 32;
-        } else if (width < 1600) {
-          crossAxisCount = 5; // Desktop
-          horizontalPadding = 48;
-        } else {
-          crossAxisCount = 6; // Ultra wide
-          horizontalPadding = 80;
-        }
-
-        final childAspectRatio = width < 600 ? 0.65 : 0.72;
+        final config = ResponsiveUtils.getGridConfig(width);
+        final crossAxisCount = config.crossAxisCount;
+        final horizontalPadding = config.horizontalPadding;
+        final childAspectRatio = config.childAspectRatio;
 
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: horizontalPadding),

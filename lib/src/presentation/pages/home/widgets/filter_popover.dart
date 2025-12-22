@@ -4,17 +4,50 @@ import '../../../../config/theme/app_theme.dart';
 
 class FilterPopover extends StatefulWidget {
   final VoidCallback onClose;
+  final String initialGender;
+  final String initialSpecies;
+  final String initialStatus;
+  final Function(String gender, String species, String status) onApply;
 
-  const FilterPopover({super.key, required this.onClose});
+  const FilterPopover({
+    super.key,
+    required this.onClose,
+    required this.initialGender,
+    required this.initialSpecies,
+    required this.initialStatus,
+    required this.onApply,
+  });
 
   @override
   State<FilterPopover> createState() => _FilterPopoverState();
 }
 
 class _FilterPopoverState extends State<FilterPopover> {
-  String selectedGender = 'All';
-  String selectedSpecies = 'All';
-  String selectedStatus = 'All';
+  late String selectedGender;
+  late String selectedSpecies;
+  late String selectedStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedGender = widget.initialGender;
+    selectedSpecies = widget.initialSpecies;
+    selectedStatus = widget.initialStatus;
+  }
+
+  @override
+  void didUpdateWidget(FilterPopover oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialGender != widget.initialGender) {
+      selectedGender = widget.initialGender;
+    }
+    if (oldWidget.initialSpecies != widget.initialSpecies) {
+      selectedSpecies = widget.initialSpecies;
+    }
+    if (oldWidget.initialStatus != widget.initialStatus) {
+      selectedStatus = widget.initialStatus;
+    }
+  }
 
   final List<String> genders = ['All', 'Male', 'Female', 'Droid', 'Other'];
   final List<String> species = ['All', 'Human', 'Droid', 'Wookiee', 'Yoda'];
@@ -145,7 +178,14 @@ class _FilterPopoverState extends State<FilterPopover> {
                             ),
                           ),
                           child: ElevatedButton(
-                            onPressed: widget.onClose,
+                            onPressed: () {
+                              widget.onApply(
+                                selectedGender,
+                                selectedSpecies,
+                                selectedStatus,
+                              );
+                              widget.onClose();
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.transparent,
                               foregroundColor: Colors.white,

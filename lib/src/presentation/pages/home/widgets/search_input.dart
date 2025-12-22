@@ -4,6 +4,7 @@ import 'filter_popover.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:holocron/src/presentation/bloc/character/character_bloc.dart';
 import 'package:holocron/src/presentation/bloc/character/character_event.dart';
+import 'package:holocron/src/presentation/bloc/character/character_state.dart';
 
 class SearchInput extends StatefulWidget {
   const SearchInput({super.key});
@@ -41,10 +42,36 @@ class _SearchInputState extends State<SearchInput> {
                 offset: const Offset(0, 10),
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: FilterPopover(
-                    onClose: () {
-                      _overlayController.hide();
-                      setState(() {});
+                  child: BlocBuilder<CharacterBloc, CharacterState>(
+                    builder: (context, state) {
+                      String g = 'All';
+                      String s = 'All';
+                      String st = 'All';
+
+                      if (state is CharacterLoaded) {
+                        g = state.genderFilter;
+                        s = state.speciesFilter;
+                        st = state.statusFilter;
+                      }
+
+                      return FilterPopover(
+                        initialGender: g,
+                        initialSpecies: s,
+                        initialStatus: st,
+                        onApply: (gender, species, status) {
+                          context.read<CharacterBloc>().add(
+                            FilterCharacters(
+                              gender: gender,
+                              species: species,
+                              status: status,
+                            ),
+                          );
+                        },
+                        onClose: () {
+                          _overlayController.hide();
+                          setState(() {});
+                        },
+                      );
                     },
                   ),
                 ),
