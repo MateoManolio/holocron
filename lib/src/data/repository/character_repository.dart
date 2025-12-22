@@ -73,3 +73,4 @@ class CharacterRepository implements ICharacterRepository {
     );
   }
 }
+

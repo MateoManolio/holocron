@@ -7,3 +7,4 @@ abstract class IFavoritesRepository {
   Future<bool> isFavorite(String id);
   Future<void> clearFavorites();
 }
+

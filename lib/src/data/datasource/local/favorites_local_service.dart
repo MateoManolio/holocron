@@ -2,7 +2,7 @@ import '../../../core/interfaces/local_storage.dart';
 import '../../models/character_model.dart';
 import '../interfaces/i_favorites_local_service.dart';
 
-class FavoritesLocalDataSourceImpl implements IFavoritesLocalDataSource {
+class FavoritesLocalDataSourceImpl implements IFavoritesDataSource {
   final ILocalStorage _storage;
   static const String _boxName = 'favorites';
 
@@ -52,3 +52,4 @@ class FavoritesLocalDataSourceImpl implements IFavoritesLocalDataSource {
     await _storage.setValue(_boxName, 'list', jsonList);
   }
 }
+

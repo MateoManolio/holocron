@@ -13,3 +13,4 @@ abstract class ISwapiService {
   /// Method to fetch a single person
   Future<CharacterDto> getPerson(int id, {AppCancellationToken? cancelToken});
 }
+

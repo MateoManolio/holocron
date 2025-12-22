@@ -5,3 +5,4 @@ abstract class ICharacterRepository {
   Future<Character?> getCharacterById(String id);
   Future<List<Character>> getCharactersByQuery(String query);
 }
+
