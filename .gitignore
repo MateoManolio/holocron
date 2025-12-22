@@ -32,6 +32,10 @@ migrate_working_dir/
 /build/
 /coverage/
 
+# Firebase Configuration (contains API keys)
+lib/firebase_options.dart
+
+
 # Symbolication related
 app.*.symbols
 
