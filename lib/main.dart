@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:holocron/src/config/theme/app_theme.dart';
 import 'package:holocron/src/presentation/pages/main/main_page.dart';
+import 'src/core/di/dependency_injection.dart';
 
-void main() {
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'src/presentation/bloc/character/character_bloc.dart';
+import 'src/presentation/bloc/character/character_event.dart';
+import 'src/presentation/bloc/favorites/favorites_bloc.dart';
+import 'src/presentation/bloc/favorites/favorites_event.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initDependencies();
   runApp(const MainApp());
 }
 
@@ -11,11 +20,19 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Holocron',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      home: const MainPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => sl<CharacterBloc>()..add(FetchCharacters()),
+        ),
+        BlocProvider(create: (_) => sl<FavoritesBloc>()..add(LoadFavorites())),
+      ],
+      child: MaterialApp(
+        title: 'Holocron',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        home: const MainPage(),
+      ),
     );
   }
 }
