@@ -14,11 +14,19 @@ class FavoritesLoading extends FavoritesState {}
 
 class FavoritesLoaded extends FavoritesState {
   final List<Character> favorites;
+  final String sortOption;
 
-  const FavoritesLoaded(this.favorites);
+  const FavoritesLoaded({required this.favorites, this.sortOption = 'Default'});
 
   @override
-  List<Object?> get props => [favorites];
+  List<Object?> get props => [favorites, sortOption];
+
+  FavoritesLoaded copyWith({List<Character>? favorites, String? sortOption}) {
+    return FavoritesLoaded(
+      favorites: favorites ?? this.favorites,
+      sortOption: sortOption ?? this.sortOption,
+    );
+  }
 }
 
 class FavoritesError extends FavoritesState {

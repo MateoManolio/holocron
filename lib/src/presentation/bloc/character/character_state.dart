@@ -17,12 +17,20 @@ class CharacterLoaded extends CharacterState {
   final List<Character> displayedCharacters;
   final bool hasReachedMax;
   final String query;
+  final String genderFilter;
+  final String speciesFilter;
+  final String statusFilter;
+  final String sortOption;
 
   const CharacterLoaded({
     required this.allCharacters,
     required this.displayedCharacters,
     required this.hasReachedMax,
     this.query = '',
+    this.genderFilter = 'All',
+    this.speciesFilter = 'All',
+    this.statusFilter = 'All',
+    this.sortOption = 'Relevance',
   });
 
   @override
@@ -31,6 +39,10 @@ class CharacterLoaded extends CharacterState {
     displayedCharacters,
     hasReachedMax,
     query,
+    genderFilter,
+    speciesFilter,
+    statusFilter,
+    sortOption,
   ];
 
   CharacterLoaded copyWith({
@@ -38,12 +50,20 @@ class CharacterLoaded extends CharacterState {
     List<Character>? displayedCharacters,
     bool? hasReachedMax,
     String? query,
+    String? genderFilter,
+    String? speciesFilter,
+    String? statusFilter,
+    String? sortOption,
   }) {
     return CharacterLoaded(
       allCharacters: allCharacters ?? this.allCharacters,
       displayedCharacters: displayedCharacters ?? this.displayedCharacters,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
       query: query ?? this.query,
+      genderFilter: genderFilter ?? this.genderFilter,
+      speciesFilter: speciesFilter ?? this.speciesFilter,
+      statusFilter: statusFilter ?? this.statusFilter,
+      sortOption: sortOption ?? this.sortOption,
     );
   }
 }

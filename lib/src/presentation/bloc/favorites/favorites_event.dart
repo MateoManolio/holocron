@@ -27,3 +27,14 @@ class RemoveFromFavorites extends FavoritesEvent {
   @override
   List<Object?> get props => [id];
 }
+
+class SortFavorites extends FavoritesEvent {
+  final String sortOption;
+
+  const SortFavorites(this.sortOption);
+
+  @override
+  List<Object?> get props => [sortOption];
+}
+
+class ClearAllFavorites extends FavoritesEvent {}

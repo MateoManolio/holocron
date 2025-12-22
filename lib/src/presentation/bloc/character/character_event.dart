@@ -19,3 +19,27 @@ class SearchCharacters extends CharacterEvent {
   @override
   List<Object?> get props => [query];
 }
+
+class FilterCharacters extends CharacterEvent {
+  final String gender;
+  final String species;
+  final String status;
+
+  const FilterCharacters({
+    required this.gender,
+    required this.species,
+    required this.status,
+  });
+
+  @override
+  List<Object?> get props => [gender, species, status];
+}
+
+class SortCharacters extends CharacterEvent {
+  final String sortOption;
+
+  const SortCharacters(this.sortOption);
+
+  @override
+  List<Object?> get props => [sortOption];
+}
