@@ -11,6 +11,11 @@ dependencies:
     sdk: flutter
   dio: ^5.9.0
   hive_ce: ^2.16.0
+  hive_ce_flutter: ^2.3.3
+  path_provider: ^2.1.5
+  get_it: ^9.2.0
+  flutter_bloc: ^8.1.6
+  equatable: ^2.0.5
 
 dev_dependencies:
   flutter_test:
