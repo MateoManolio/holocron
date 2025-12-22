@@ -82,3 +82,4 @@ abstract class AppTheme {
     ),
   );
 }
+
