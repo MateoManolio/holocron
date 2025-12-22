@@ -5,4 +5,5 @@ abstract interface class IFavoritesLocalDataSource {
   Future<void> saveFavorite(CharacterModel character);
   Future<void> removeFavorite(String id);
   Future<bool> containsFavorite(String id);
+  Future<void> clearFavorites();
 }

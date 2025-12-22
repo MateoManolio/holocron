@@ -42,6 +42,11 @@ class FavoritesLocalDataSourceImpl implements IFavoritesLocalDataSource {
     return favorites.any((e) => e.id.toString() == id);
   }
 
+  @override
+  Future<void> clearFavorites() async {
+    await _saveList([]);
+  }
+
   Future<void> _saveList(List<CharacterModel> list) async {
     final jsonList = list.map((e) => e.toJson()).toList();
     await _storage.setValue(_boxName, 'list', jsonList);

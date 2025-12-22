@@ -5,4 +5,5 @@ abstract class IFavoritesRepository {
   Future<void> addFavorite(Character character);
   Future<void> removeFavorite(String id);
   Future<bool> isFavorite(String id);
+  Future<void> clearFavorites();
 }
