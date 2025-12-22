@@ -51,4 +51,9 @@ class FavoritesRepository implements IFavoritesRepository {
   Future<void> removeFavorite(String id) {
     return _localDataSource.removeFavorite(id);
   }
+
+  @override
+  Future<void> clearFavorites() {
+    return _localDataSource.clearFavorites();
+  }
 }

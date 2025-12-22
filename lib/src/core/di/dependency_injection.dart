@@ -12,6 +12,7 @@ import '../../domain/usecase/add_favorite_usecase.dart';
 import '../../domain/usecase/get_character_by_id_usecase.dart';
 import '../../domain/usecase/get_characters_by_query_usecase.dart';
 import '../../domain/usecase/get_characters_usecase.dart';
+import '../../domain/usecase/clear_favorites_usecase.dart';
 import '../../domain/usecase/get_favorites_usecase.dart';
 import '../../domain/usecase/is_favorite_usecase.dart';
 import '../../domain/usecase/remove_favorite_usecase.dart';
@@ -55,6 +56,8 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => RemoveFavoriteUseCase(sl()));
   sl.registerLazySingleton(() => IsFavoriteUseCase(sl()));
 
+  sl.registerLazySingleton(() => ClearFavoritesUseCase(sl()));
+
   // Blocs
   sl.registerFactory(() => CharacterBloc(getCharactersUseCase: sl()));
   sl.registerFactory(
@@ -62,6 +65,7 @@ Future<void> initDependencies() async {
       getFavoritesUseCase: sl(),
       addFavoriteUseCase: sl(),
       removeFavoriteUseCase: sl(),
+      clearFavoritesUseCase: sl(),
     ),
   );
 }
