@@ -1,51 +1,31 @@
-class CharacterDto {
-  final int id;
-  final String name;
-  final double? height;
-  final int? mass;
-  final String? gender;
-  final String? homeworld;
-  final String? wiki;
-  final String? image;
-  final int? born;
-  final String? bornLocation;
-  final int? died;
-  final String? diedLocation;
-  final String? species;
-  final String? hairColor;
-  final String? eyeColor;
-  final String? skinColor;
-  final String? cybernetics;
-  final List<String> affiliations;
-  final List<String> masters;
-  final List<String> apprentices;
-  final List<String> formerAffiliations;
+import '../../domain/entities/character.dart';
 
-  CharacterDto({
-    required this.id,
-    required this.name,
-    this.height,
-    this.mass,
-    this.gender,
-    this.homeworld,
-    this.wiki,
-    this.image,
-    this.born,
-    this.bornLocation,
-    this.died,
-    this.diedLocation,
-    this.species,
-    this.hairColor,
-    this.eyeColor,
-    this.skinColor,
-    this.cybernetics,
-    this.affiliations = const [],
-    this.masters = const [],
-    this.apprentices = const [],
-    this.formerAffiliations = const [],
+class CharacterModel extends Character {
+  CharacterModel({
+    required super.id,
+    required super.name,
+    super.height,
+    super.mass,
+    super.gender,
+    super.homeworld,
+    super.wiki,
+    super.image,
+    super.born,
+    super.bornLocation,
+    super.died,
+    super.diedLocation,
+    super.species,
+    super.hairColor,
+    super.eyeColor,
+    super.skinColor,
+    super.cybernetics,
+    super.affiliations,
+    super.masters,
+    super.apprentices,
+    super.formerAffiliations,
   });
 
-  factory CharacterDto.fromJson(Map<String, dynamic> json) {
+  factory CharacterModel.fromJson(Map<String, dynamic> json) {
     List<String> _parseList(dynamic value) {
       if (value == null) return const [];
       if (value is List) return List<String>.from(value);
@@ -72,7 +52,7 @@ class CharacterDto {
       return null;
     }
 
-    return CharacterDto(
+    return CharacterModel(
       id: json['id'] as int,
       name: json['name'] as String,
       height: _parseDouble(json['height']),
