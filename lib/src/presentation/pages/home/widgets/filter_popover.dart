@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../config/theme/app_theme.dart';
+import '../../../../core/constants/filter_constants.dart';
 
 class FilterPopover extends StatefulWidget {
   final VoidCallback onClose;
@@ -27,6 +28,13 @@ class _FilterPopoverState extends State<FilterPopover> {
   late String selectedSpecies;
   late String selectedStatus;
 
+  static const double _popoverWidth = 380.0;
+  static const int _animDurationMs = 300;
+  static const double _borderRadius = 20.0;
+  static const double _borderWidth = 1.5;
+  static const double _sigmaBlur = 10.0;
+  static const double _sectionSpacing = 20.0;
+
   @override
   void initState() {
     super.initState();
@@ -49,17 +57,13 @@ class _FilterPopoverState extends State<FilterPopover> {
     }
   }
 
-  final List<String> genders = ['All', 'Male', 'Female', 'Droid', 'Other'];
-  final List<String> species = ['All', 'Human', 'Droid', 'Wookiee', 'Yoda'];
-  final List<String> statuses = ['All', 'Alive', 'Deceased'];
-
   @override
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0.0, end: 1.0),
-        duration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: _animDurationMs),
         curve: Curves.easeOutCubic,
         builder: (context, value, child) {
           return Opacity(
@@ -71,24 +75,24 @@ class _FilterPopoverState extends State<FilterPopover> {
           );
         },
         child: Container(
-          width: 380,
+          width: _popoverWidth,
           margin: const EdgeInsets.only(top: 8),
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: AppTheme.cardBackground.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(20),
+            color: AppTheme.cardBackground.withValues(alpha: 0.9),
+            borderRadius: BorderRadius.circular(_borderRadius),
             border: Border.all(
-              color: AppTheme.holoBlue.withOpacity(0.2),
-              width: 1.5,
+              color: AppTheme.holoBlue.withValues(alpha: 0.2),
+              width: _borderWidth,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 blurRadius: 30,
                 offset: const Offset(0, 15),
               ),
               BoxShadow(
-                color: AppTheme.holoBlue.withOpacity(0.1),
+                color: AppTheme.holoBlue.withValues(alpha: 0.1),
                 blurRadius: 10,
                 offset: const Offset(0, 0),
               ),
@@ -97,12 +101,11 @@ class _FilterPopoverState extends State<FilterPopover> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              filter: ImageFilter.blur(sigmaX: _sigmaBlur, sigmaY: _sigmaBlur),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Popover Header
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -119,39 +122,50 @@ class _FilterPopoverState extends State<FilterPopover> {
                         onPressed: widget.onClose,
                         icon: const Icon(Icons.close, size: 18),
                         visualDensity: VisualDensity.compact,
-                        color: AppTheme.lightGray.withOpacity(0.6),
+                        color: AppTheme.lightGray.withValues(alpha: 0.6),
                       ),
                     ],
                   ),
                   const Divider(color: Colors.white10, height: 24),
 
-                  // Filter Sections
-                  _buildSection('GENDER', genders, selectedGender, (val) {
-                    setState(() => selectedGender = val);
-                  }),
-                  const SizedBox(height: 20),
-                  _buildSection('SPECIES', species, selectedSpecies, (val) {
-                    setState(() => selectedSpecies = val);
-                  }),
-                  const SizedBox(height: 20),
-                  _buildSection('VITAL STATUS', statuses, selectedStatus, (
-                    val,
-                  ) {
-                    setState(() => selectedStatus = val);
-                  }),
+                  _buildSection(
+                    'GENDER',
+                    FilterConstants.genders,
+                    selectedGender,
+                    (val) {
+                      setState(() => selectedGender = val);
+                    },
+                  ),
+                  const SizedBox(height: _sectionSpacing),
+                  _buildSection(
+                    'SPECIES',
+                    FilterConstants.species,
+                    selectedSpecies,
+                    (val) {
+                      setState(() => selectedSpecies = val);
+                    },
+                  ),
+                  const SizedBox(height: _sectionSpacing),
+                  _buildSection(
+                    'VITAL STATUS',
+                    FilterConstants.statuses,
+                    selectedStatus,
+                    (val) {
+                      setState(() => selectedStatus = val);
+                    },
+                  ),
 
                   const SizedBox(height: 28),
 
-                  // Actions
                   Row(
                     children: [
                       Expanded(
                         child: TextButton(
                           onPressed: () {
                             setState(() {
-                              selectedGender = 'All';
-                              selectedSpecies = 'All';
-                              selectedStatus = 'All';
+                              selectedGender = FilterConstants.all;
+                              selectedSpecies = FilterConstants.all;
+                              selectedStatus = FilterConstants.all;
                             });
                           },
                           style: TextButton.styleFrom(
@@ -173,7 +187,7 @@ class _FilterPopoverState extends State<FilterPopover> {
                             gradient: LinearGradient(
                               colors: [
                                 AppTheme.holoBlue,
-                                AppTheme.holoBlue.withOpacity(0.7),
+                                AppTheme.holoBlue.withValues(alpha: 0.7),
                               ],
                             ),
                           ),
@@ -228,7 +242,7 @@ class _FilterPopoverState extends State<FilterPopover> {
         Text(
           title,
           style: TextStyle(
-            color: Colors.white.withOpacity(0.4),
+            color: Colors.white.withValues(alpha: 0.4),
             fontSize: 10,
             fontWeight: FontWeight.bold,
             letterSpacing: 1.2,
@@ -250,8 +264,8 @@ class _FilterPopoverState extends State<FilterPopover> {
                 ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppTheme.holoBlue.withOpacity(0.15)
-                      : Colors.white.withOpacity(0.05),
+                      ? AppTheme.holoBlue.withValues(alpha: 0.15)
+                      : Colors.white.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isSelected ? AppTheme.holoBlue : Colors.white12,
@@ -276,4 +290,3 @@ class _FilterPopoverState extends State<FilterPopover> {
     );
   }
 }
-

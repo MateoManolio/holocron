@@ -25,7 +25,6 @@ class HeroSection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
         child: Column(
           children: [
-            // Título principal
             Text(
               'Explore the Galaxy',
               style: AppTheme.heading1.copyWith(
@@ -36,7 +35,6 @@ class HeroSection extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            // Subtítulo
             Text(
               'Search for your favorite characters from the Star Wars universe and build your squad.',
               style: AppTheme.bodyText.copyWith(
@@ -46,7 +44,6 @@ class HeroSection extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
-            // Search input
             const SearchInput(),
           ],
         ),
@@ -54,4 +51,3 @@ class HeroSection extends StatelessWidget {
     );
   }
 }
-

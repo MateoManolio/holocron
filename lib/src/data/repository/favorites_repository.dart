@@ -58,7 +58,6 @@ class FavoritesRepository implements IFavoritesRepository {
 
     // Sync to cloud if user is authenticated
     if (_shouldSyncToCloud && _remoteDataSource != null) {
-      // Fire and forget - errors are logged in the datasource
       _remoteDataSource.saveFavorite(model).catchError((e) {
         _analytics.logSyncError(
           operation: 'background_save_favorite',
@@ -85,19 +84,15 @@ class FavoritesRepository implements IFavoritesRepository {
       }
     }
 
-    // Use local storage (for guests or as fallback)
     return await _localDataSource.getFavorites();
   }
 
   @override
   Future<bool> isFavorite(String id) async {
-    // Check local storage for quick response
     final isLocalFavorite = await _localDataSource.containsFavorite(id);
 
-    // If found locally, return immediately
     if (isLocalFavorite) return true;
 
-    // If authenticated, also check remote
     if (_shouldSyncToCloud && _remoteDataSource != null) {
       try {
         return await _remoteDataSource.containsFavorite(id);
@@ -144,4 +139,3 @@ class FavoritesRepository implements IFavoritesRepository {
     }
   }
 }
-

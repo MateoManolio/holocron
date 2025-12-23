@@ -18,16 +18,24 @@ class _ProfileButtonState extends State<ProfileButton>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
+  static const double _initialScale = 1.0;
+  static const double _hoverScale = 1.1;
+  static const int _animDurationMs = 150;
+  static const double _buttonSize = 45.0;
+  static const double _menuWidth = 200.0;
+  static const double _menuOffsetTop = 70.0;
+  static const double _menuOffsetRight = 20.0;
+
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: _animDurationMs),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.1,
+      begin: _initialScale,
+      end: _hoverScale,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
@@ -38,29 +46,29 @@ class _ProfileButtonState extends State<ProfileButton>
   }
 
   void _showProfileMenu(BuildContext context) {
-    final authState = context.read<AuthBloc>().state;
-    final user = authState.user;
+    final authBloc = context.read<AuthBloc>();
+    final user = authBloc.state.user;
 
-    // If guest, navigate to login instead of showing menu
     if (user?.isGuest == true) {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (_) => const LoginPage()));
+      authBloc.add(AuthNavigateToLoginRequested());
       return;
     }
 
     showMenu<String>(
       context: context,
       position: RelativeRect.fromLTRB(
-        MediaQuery.of(context).size.width - 200,
-        70,
-        20,
+        MediaQuery.of(context).size.width - _menuWidth,
+        _menuOffsetTop,
+        _menuOffsetRight,
         0,
       ),
       color: AppTheme.cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppTheme.holoBlue.withOpacity(0.3), width: 1),
+        side: BorderSide(
+          color: AppTheme.holoBlue.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       items: [
         PopupMenuItem<String>(
@@ -99,15 +107,22 @@ class _ProfileButtonState extends State<ProfileButton>
         ),
       ],
     ).then((value) {
-      if (value == 'logout') {
-        context.read<AuthBloc>().add(AuthLogoutRequested());
+      if (context.mounted && value == 'logout') {
+        authBloc.add(AuthLogoutRequested());
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state.navigationTarget == AuthNavigationTarget.login) {
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const LoginPage()));
+        }
+      },
       builder: (context, state) {
         final user = state.user;
         return GestureDetector(
@@ -118,15 +133,15 @@ class _ProfileButtonState extends State<ProfileButton>
           child: ScaleTransition(
             scale: _scaleAnimation,
             child: Container(
-              width: 45,
-              height: 45,
+              width: _buttonSize,
+              height: _buttonSize,
               decoration: BoxDecoration(
                 color: AppTheme.cardBackground,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: user?.isGuest == true
-                      ? AppTheme.imperialYellow.withOpacity(0.5)
-                      : AppTheme.holoBlue.withOpacity(0.5),
+                      ? AppTheme.imperialYellow.withValues(alpha: 0.5)
+                      : AppTheme.holoBlue.withValues(alpha: 0.5),
                   width: 2,
                 ),
                 boxShadow: [
@@ -135,7 +150,7 @@ class _ProfileButtonState extends State<ProfileButton>
                         (user?.isGuest == true
                                 ? AppTheme.imperialYellow
                                 : AppTheme.holoBlue)
-                            .withOpacity(0.2),
+                            .withValues(alpha: 0.2),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -155,4 +170,3 @@ class _ProfileButtonState extends State<ProfileButton>
     );
   }
 }
-

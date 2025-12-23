@@ -17,40 +17,19 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
-  }
-
-  void _onSignUpPressed() {
-    if (_formKey.currentState?.validate() ?? false) {
-      context.read<AuthBloc>().add(
-        AuthSignUpRequested(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        ),
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final authBloc = context.read<AuthBloc>();
+
     return Scaffold(
       body: AuthBackground(
         child: SafeArea(
           child: Stack(
             children: [
-              // Main content
               Center(
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
@@ -63,10 +42,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // Logo
                             const Center(child: HyperdriveLogo()),
                             const SizedBox(height: 32),
-                            // Title
                             const Text(
                               'HOLOCRON',
                               textAlign: TextAlign.center,
@@ -78,7 +55,6 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            // Subtitle
                             Text(
                               'PILOT REGISTRATION',
                               textAlign: TextAlign.center,
@@ -90,7 +66,6 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                             const SizedBox(height: 32),
-                            // Instruction text
                             Text(
                               'Register your credentials to join the fleet.',
                               textAlign: TextAlign.center,
@@ -100,9 +75,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                             const SizedBox(height: 40),
-                            // Email field
                             CustomTextField(
-                              controller: _emailController,
+                              controller: authBloc.emailController,
                               label: 'IDENTIFICATION (EMAIL)',
                               icon: Icons.email_outlined,
                               validator: (value) {
@@ -116,9 +90,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               },
                             ),
                             const SizedBox(height: 20),
-                            // Password field
                             CustomTextField(
-                              controller: _passwordController,
+                              controller: authBloc.passwordController,
                               label: 'SECURITY CODE',
                               icon: Icons.lock_outline,
                               obscureText: _obscurePassword,
@@ -146,9 +119,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               },
                             ),
                             const SizedBox(height: 20),
-                            // Confirm Password field
                             CustomTextField(
-                              controller: _confirmPasswordController,
+                              controller: authBloc.confirmPasswordController,
                               label: 'CONFIRM SECURITY CODE',
                               icon: Icons.lock_outline,
                               obscureText: _obscureConfirmPassword,
@@ -170,34 +142,42 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (value == null || value.isEmpty) {
                                   return 'Please confirm your password';
                                 }
-                                if (value != _passwordController.text) {
+                                if (value != authBloc.passwordController.text) {
                                   return 'Passwords do not match';
                                 }
                                 return null;
                               },
                             ),
                             const SizedBox(height: 32),
-                            // Sign up button
                             BlocConsumer<AuthBloc, AuthState>(
                               listener: (context, state) {
                                 if (state.status == AuthStatus.authenticated) {
-                                  // Navigation handled by AuthWrapper
+                                  Navigator.of(context).pop();
+                                }
+                                if (state.navigationTarget ==
+                                    AuthNavigationTarget.login) {
                                   Navigator.of(context).pop();
                                 }
                               },
                               builder: (context, state) {
                                 return HyperdriveButton(
-                                  onPressed: _onSignUpPressed,
+                                  onPressed: () {
+                                    if (_formKey.currentState?.validate() ??
+                                        false) {
+                                      authBloc.add(const AuthSignUpRequested());
+                                    }
+                                  },
                                   text: 'REGISTER PILOT',
                                   isLoading: state.isLoading,
                                 );
                               },
                             ),
                             const SizedBox(height: 24),
-                            // Back to login link
                             Center(
                               child: TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
+                                onPressed: () => authBloc.add(
+                                  const AuthNavigateToLoginRequested(),
+                                ),
                                 child: RichText(
                                   text: TextSpan(
                                     style: TextStyle(
@@ -225,7 +205,6 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
-              // Footer
               const AuthFooter(),
             ],
           ),
@@ -234,4 +213,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-

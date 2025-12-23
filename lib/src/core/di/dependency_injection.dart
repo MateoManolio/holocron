@@ -26,6 +26,7 @@ import '../../domain/usecase/remove_favorite_usecase.dart';
 import '../../presentation/bloc/auth/auth_bloc.dart';
 import '../../presentation/bloc/character/character_bloc.dart';
 import '../../presentation/bloc/favorites/favorites_bloc.dart';
+import '../../presentation/bloc/main/main_bloc.dart';
 import '../db/hive_local_storage.dart';
 import '../interfaces/local_storage.dart';
 import '../network/dio_client.dart';
@@ -118,5 +119,5 @@ Future<void> initDependencies() async {
       signInAnonymouslyUseCase: sl(),
     ),
   );
+  sl.registerFactory(() => MainBloc());
 }
-

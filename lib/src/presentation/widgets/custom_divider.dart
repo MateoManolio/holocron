@@ -15,7 +15,7 @@ class CustomDivider extends StatelessWidget {
           gradient: LinearGradient(
             colors: [
               Colors.transparent,
-              AppTheme.holoBlue.withOpacity(0.3),
+              AppTheme.holoBlue.withValues(alpha: 0.3),
               Colors.transparent,
             ],
           ),
@@ -24,4 +24,3 @@ class CustomDivider extends StatelessWidget {
     );
   }
 }
-

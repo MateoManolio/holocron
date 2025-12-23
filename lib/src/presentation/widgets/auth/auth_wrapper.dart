@@ -24,6 +24,7 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, state) {
         switch (state.status) {
           case AuthStatus.authenticated:
+          case AuthStatus.guest:
             return const MainPage();
           case AuthStatus.unauthenticated:
             return const LoginPage();
@@ -36,4 +37,3 @@ class AuthWrapper extends StatelessWidget {
     );
   }
 }
-

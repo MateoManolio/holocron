@@ -1,8 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../config/theme/app_theme.dart';
 
-/// Fondo animado de estrellas
 class StarfieldBackground extends StatefulWidget {
   const StarfieldBackground({super.key});
 
@@ -18,7 +18,7 @@ class StarfieldBackgroundState extends State<StarfieldBackground>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 20),
+      duration: const Duration(seconds: 60),
       vsync: this,
     )..repeat();
   }
@@ -43,7 +43,6 @@ class StarfieldBackgroundState extends State<StarfieldBackground>
   }
 }
 
-/// Painter para el efecto de estrellas
 class _StarfieldPainter extends CustomPainter {
   final double animation;
 
@@ -52,22 +51,29 @@ class _StarfieldPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.6)
+      ..color = Colors.white.withValues(alpha: .6)
       ..strokeWidth = 1.5;
 
-    // Generar estrellas pseudo-aleatorias
-    for (int i = 0; i < 50; i++) {
-      final x = (i * 37.5) % size.width;
-      final y = ((i * 67.3 + animation * 100) % size.height);
-      final opacity = ((i * 0.1) % 1.0) * 0.5 + 0.2;
+    final random = Random(42);
+    const int starCount = 80;
 
-      paint.color = Colors.white.withValues(alpha: opacity);
-      canvas.drawCircle(Offset(x, y), 1.5, paint);
+    for (int i = 0; i < starCount; i++) {
+      // Generate consistent random values using the seed
+      final x = random.nextDouble() * size.width;
+      final rawY = random.nextDouble() * size.height;
+      // Vertical displacement depends on animation for the movement effect
+      final y = (rawY + animation * size.height) % size.height;
 
-      // Algunas estrellas con brillo
-      if (i % 7 == 0) {
-        paint.color = AppTheme.holoBlue.withValues(alpha: opacity * 0.5);
-        canvas.drawCircle(Offset(x, y), 2.5, paint);
+      final baseOpacity = random.nextDouble() * 0.6 + 0.2;
+      final starRadius = random.nextDouble() * 1.2 + 0.3;
+
+      paint.color = Colors.white.withValues(alpha: baseOpacity);
+      canvas.drawCircle(Offset(x, y), starRadius, paint);
+
+      // Some stars have a special glow effect
+      if (random.nextDouble() > 0.85) {
+        paint.color = AppTheme.holoBlue.withValues(alpha: baseOpacity * 0.4);
+        canvas.drawCircle(Offset(x, y), starRadius * 2.5, paint);
       }
     }
   }
@@ -77,4 +83,3 @@ class _StarfieldPainter extends CustomPainter {
     return oldDelegate.animation != animation;
   }
 }
-

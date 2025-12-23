@@ -14,6 +14,7 @@ import 'firebase_options.dart';
 import 'src/presentation/widgets/auth/auth_wrapper.dart';
 import 'src/presentation/bloc/auth/auth_bloc.dart';
 import 'src/presentation/bloc/auth/auth_event.dart';
+import 'src/presentation/bloc/main/main_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +37,7 @@ class MainApp extends StatelessWidget {
           create: (_) => sl<CharacterBloc>()..add(FetchCharacters()),
         ),
         BlocProvider(create: (_) => sl<FavoritesBloc>()..add(LoadFavorites())),
+        BlocProvider(create: (_) => sl<MainBloc>()),
       ],
       child: MaterialApp(
         title: 'Holocron',

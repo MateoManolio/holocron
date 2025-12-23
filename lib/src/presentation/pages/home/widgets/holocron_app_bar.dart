@@ -23,7 +23,7 @@ class HolocronAppBar extends StatelessWidget implements PreferredSizeWidget {
     return ClipRect(
       child: BackdropFilter(
         filter: ColorFilter.mode(
-          Colors.black.withOpacity(0.2),
+          Colors.black.withValues(alpha: .2),
           BlendMode.darken,
         ),
         child: Container(
@@ -32,8 +32,8 @@ class HolocronAppBar extends StatelessWidget implements PreferredSizeWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                AppTheme.spaceBlack.withOpacity(0.8),
-                AppTheme.spaceBlack.withOpacity(0.0),
+                AppTheme.spaceBlack.withValues(alpha: .8),
+                AppTheme.spaceBlack.withValues(alpha: .0),
               ],
             ),
           ),
@@ -78,7 +78,9 @@ class HolocronAppBar extends StatelessWidget implements PreferredSizeWidget {
                               borderRadius: BorderRadius.circular(8),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppTheme.imperialYellow.withOpacity(.3),
+                                  color: AppTheme.imperialYellow.withValues(
+                                    alpha: .3,
+                                  ),
                                   blurRadius: 10,
                                   spreadRadius: 2,
                                 ),
@@ -119,4 +121,3 @@ class HolocronAppBar extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 }
-

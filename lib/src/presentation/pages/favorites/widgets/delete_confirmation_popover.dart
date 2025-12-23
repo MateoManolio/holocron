@@ -32,34 +32,31 @@ class DeleteConfirmationPopover extends StatelessWidget {
           );
         },
         child: Container(
-          width: 290, // Slightly wider to ensure no truncation
+          width: 290,
           margin: const EdgeInsets.only(top: 4),
           decoration: BoxDecoration(
-            color: AppTheme.cardBackground.withOpacity(0.98),
+            color: AppTheme.cardBackground.withValues(alpha: .98),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: AppTheme.terminalGreen.withOpacity(0.3),
+              color: AppTheme.terminalGreen.withValues(alpha: .3),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.6),
+                color: Colors.black.withValues(alpha: .6),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(
-              14,
-            ), // Matches container internal radius
+            borderRadius: BorderRadius.circular(14),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Header with padding
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 12, 8, 8),
                     child: Row(
@@ -82,18 +79,16 @@ class DeleteConfirmationPopover extends StatelessWidget {
                           visualDensity: VisualDensity.compact,
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),
-                          color: Colors.white.withOpacity(0.4),
+                          color: Colors.white.withValues(alpha: .4),
                         ),
                       ],
                     ),
                   ),
-                  // Stretched Divider
                   Container(
                     height: 1,
                     width: double.infinity,
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withValues(alpha: .1),
                   ),
-                  // Content with padding
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -104,7 +99,7 @@ class DeleteConfirmationPopover extends StatelessWidget {
                           style: AppTheme.bodyText.copyWith(
                             fontSize: 12,
                             height: 1.5,
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: .9),
                           ),
                         ),
                         const SizedBox(height: 18),
@@ -114,7 +109,7 @@ class DeleteConfirmationPopover extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                             gradient: LinearGradient(
                               colors: [
-                                AppTheme.accentRed.withOpacity(0.85),
+                                AppTheme.accentRed.withValues(alpha: .85),
                                 AppTheme.accentRed,
                               ],
                             ),
@@ -154,4 +149,3 @@ class DeleteConfirmationPopover extends StatelessWidget {
     );
   }
 }
-

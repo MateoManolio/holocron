@@ -44,3 +44,20 @@ class SortCharacters extends CharacterEvent {
   List<Object?> get props => [sortOption];
 }
 
+class SearchFocusChanged extends CharacterEvent {
+  final bool isFocused;
+
+  const SearchFocusChanged(this.isFocused);
+
+  @override
+  List<Object?> get props => [isFocused];
+}
+
+class FilterPopoverToggled extends CharacterEvent {
+  final bool isOpen;
+
+  const FilterPopoverToggled(this.isOpen);
+
+  @override
+  List<Object?> get props => [isOpen];
+}

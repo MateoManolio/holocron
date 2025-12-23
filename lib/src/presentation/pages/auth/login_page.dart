@@ -18,47 +18,18 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _onLoginPressed() {
-    if (_formKey.currentState?.validate() ?? false) {
-      context.read<AuthBloc>().add(
-        AuthLoginRequested(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        ),
-      );
-    }
-  }
-
-  void _onGuestPressed() {
-    context.read<AuthBloc>().add(AuthGuestLoginRequested());
-  }
-
-  void _navigateToSignUp() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (_) => const SignUpPage()));
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final authBloc = context.read<AuthBloc>();
+
     return Scaffold(
       body: AuthBackground(
         child: SafeArea(
           child: Stack(
             children: [
-              // Main content
               Center(
                 child: SingleChildScrollView(
                   child: ConstrainedBox(
@@ -71,10 +42,8 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            // Logo
                             const Center(child: HyperdriveLogo()),
                             const SizedBox(height: 32),
-                            // Title
                             const Text(
                               'HOLOCRON',
                               textAlign: TextAlign.center,
@@ -86,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             const SizedBox(height: 8),
-                            // Subtitle
                             Text(
                               'SYSTEM ACCESS',
                               textAlign: TextAlign.center,
@@ -98,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             const SizedBox(height: 32),
-                            // Instruction text
                             Text(
                               'Initialize Hyperspace Coordinates to proceed.',
                               textAlign: TextAlign.center,
@@ -110,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 40),
                             // Email field
                             CustomTextField(
-                              controller: _emailController,
+                              controller: authBloc.emailController,
                               label: 'IDENTIFICATION (EMAIL)',
                               icon: Icons.email_outlined,
                               validator: (value) {
@@ -123,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 20),
                             // Password field
                             CustomTextField(
-                              controller: _passwordController,
+                              controller: authBloc.passwordController,
                               label: 'SECURITY CODE',
                               icon: Icons.lock_outline,
                               obscureText: _obscurePassword,
@@ -148,18 +115,36 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                             const SizedBox(height: 32),
-                            // Engage button
-                            BlocBuilder<AuthBloc, AuthState>(
+                            // Submit button
+                            BlocConsumer<AuthBloc, AuthState>(
+                              listener: (context, state) {
+                                if (state.navigationTarget ==
+                                    AuthNavigationTarget.signup) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const SignUpPage(),
+                                    ),
+                                  );
+                                }
+                                if (state.status == AuthStatus.authenticated ||
+                                    state.status == AuthStatus.guest) {
+                                  Navigator.of(context).pop();
+                                }
+                              },
                               builder: (context, state) {
                                 return HyperdriveButton(
-                                  onPressed: _onLoginPressed,
+                                  onPressed: () {
+                                    if (_formKey.currentState?.validate() ??
+                                        false) {
+                                      authBloc.add(const AuthLoginRequested());
+                                    }
+                                  },
                                   text: 'ENGAGE HYPERDRIVE',
                                   isLoading: state.isLoading,
                                 );
                               },
                             ),
                             const SizedBox(height: 24),
-                            // Bottom links
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -188,7 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Flexible(
                                   child: TextButton(
-                                    onPressed: _onGuestPressed,
+                                    onPressed: () =>
+                                        authBloc.add(AuthGuestLoginRequested()),
                                     child: const Text(
                                       'Guest Mode',
                                       style: TextStyle(
@@ -203,10 +189,11 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                             const SizedBox(height: 16),
-                            // Sign up link
                             Center(
                               child: TextButton(
-                                onPressed: _navigateToSignUp,
+                                onPressed: () => authBloc.add(
+                                  const AuthNavigateToSignupRequested(),
+                                ),
                                 child: RichText(
                                   text: TextSpan(
                                     style: TextStyle(
@@ -234,7 +221,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              // Footer
               const AuthFooter(),
             ],
           ),

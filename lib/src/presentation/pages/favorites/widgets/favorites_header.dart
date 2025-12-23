@@ -55,18 +55,16 @@ class FavoritesHeader extends StatelessWidget {
                     Text(
                       'Access your secured collection of identified lifeforms. Data is encrypted and stored locally.',
                       style: AppTheme.bodyText.copyWith(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: .5),
                         fontSize: 14,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
-              const SizedBox(width: 16),
+              const SizedBox(width: 32),
               ClearCacheButton(
                 onPressed: () {
-                  // Show confirmation dialog before clearing
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
@@ -86,13 +84,10 @@ class FavoritesHeader extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            // Trigger clear event
-                            // context.read<FavoritesBloc>().add(ClearAllFavorites());
-                            // Need to import FavoritesBloc and Event.
-                            // However, using context inside a stateless widget is fine.
-                            // But I need to ensure imports are present.
-                            Navigator.pop(context); // Close dialog
-                            _clearFavorites(context);
+                            Navigator.pop(context);
+                            context.read<FavoritesBloc>().add(
+                              ClearAllFavorites(),
+                            );
                           },
                           child: const Text(
                             'Clear All',
@@ -112,9 +107,4 @@ class FavoritesHeader extends StatelessWidget {
       ),
     );
   }
-
-  void _clearFavorites(BuildContext context) {
-    context.read<FavoritesBloc>().add(ClearAllFavorites());
-  }
 }
-

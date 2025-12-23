@@ -13,26 +13,34 @@ class LoadMoreButton extends StatefulWidget {
 
 class _LoadMoreButtonState extends State<LoadMoreButton>
     with SingleTickerProviderStateMixin {
-  bool _isHovered = false;
+  final ValueNotifier<bool> _isHovered = ValueNotifier<bool>(false);
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+
+  static const int _animDurationMs = 150;
+  static const double _initialScale = 1.0;
+  static const double _hoverScale = 1.05;
+  static const int _containerAnimDurationMs = 200;
+  static const double _borderRadius = 12.0;
+  static const double _borderWidth = 2.0;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: _animDurationMs),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
+      begin: _initialScale,
+      end: _hoverScale,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _isHovered.dispose();
     super.dispose();
   }
 
@@ -41,87 +49,97 @@ class _LoadMoreButtonState extends State<LoadMoreButton>
     return Center(
       child: MouseRegion(
         onEnter: (_) {
-          setState(() => _isHovered = true);
+          _isHovered.value = true;
           _controller.forward();
         },
         onExit: (_) {
-          setState(() => _isHovered = false);
+          _isHovered.value = false;
           _controller.reverse();
         },
         child: ScaleTransition(
           scale: _scaleAnimation,
           child: GestureDetector(
             onTap: widget.isLoading ? null : widget.onPressed,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: _isHovered
-                      ? [
-                          AppTheme.holoBlue.withOpacity(0.8),
-                          AppTheme.holoBlue.withOpacity(0.6),
-                        ]
-                      : [
-                          AppTheme.holoBlue.withOpacity(0.2),
-                          AppTheme.holoBlue.withOpacity(0.1),
-                        ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: _isHovered
-                      ? AppTheme.holoBlue
-                      : AppTheme.holoBlue.withOpacity(0.5),
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: _isHovered
-                        ? AppTheme.holoBlue.withOpacity(0.3)
-                        : AppTheme.holoBlue.withOpacity(0.1),
-                    blurRadius: _isHovered ? 15 : 8,
-                    spreadRadius: _isHovered ? 2 : 0,
+            child: ValueListenableBuilder<bool>(
+              valueListenable: _isHovered,
+              builder: (context, isHovered, child) {
+                return AnimatedContainer(
+                  duration: const Duration(
+                    milliseconds: _containerAnimDurationMs,
                   ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (widget.isLoading)
-                    SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppTheme.holoBlue,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: isHovered
+                          ? [
+                              AppTheme.holoBlue.withValues(alpha: .8),
+                              AppTheme.holoBlue.withValues(alpha: .6),
+                            ]
+                          : [
+                              AppTheme.holoBlue.withValues(alpha: .2),
+                              AppTheme.holoBlue.withValues(alpha: .1),
+                            ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(_borderRadius),
+                    border: Border.all(
+                      color: isHovered
+                          ? AppTheme.holoBlue
+                          : AppTheme.holoBlue.withValues(alpha: .5),
+                      width: _borderWidth,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isHovered
+                            ? AppTheme.holoBlue.withValues(alpha: .3)
+                            : AppTheme.holoBlue.withValues(alpha: .1),
+                        blurRadius: isHovered ? 15 : 8,
+                        spreadRadius: isHovered ? 2 : 0,
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.isLoading)
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppTheme.holoBlue,
+                            ),
+                          ),
+                        )
+                      else
+                        Icon(
+                          Icons.refresh,
+                          color: isHovered
+                              ? AppTheme.holoBlue
+                              : AppTheme.holoBlue.withValues(alpha: .8),
+                          size: 20,
+                        ),
+                      const SizedBox(width: 12),
+                      Text(
+                        widget.isLoading ? 'LOADING...' : 'LOAD MORE ARCHIVES',
+                        style: AppTheme.caption.copyWith(
+                          color: isHovered
+                              ? AppTheme.holoBlue
+                              : AppTheme.holoBlue.withValues(alpha: .8),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                          letterSpacing: 1.5,
                         ),
                       ),
-                    )
-                  else
-                    Icon(
-                      Icons.refresh,
-                      color: _isHovered
-                          ? AppTheme.holoBlue
-                          : AppTheme.holoBlue.withOpacity(0.8),
-                      size: 20,
-                    ),
-                  const SizedBox(width: 12),
-                  Text(
-                    widget.isLoading ? 'LOADING...' : 'LOAD MORE ARCHIVES',
-                    style: AppTheme.caption.copyWith(
-                      color: _isHovered
-                          ? AppTheme.holoBlue
-                          : AppTheme.holoBlue.withOpacity(0.8),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                      letterSpacing: 1.5,
-                    ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ),
@@ -129,4 +147,3 @@ class _LoadMoreButtonState extends State<LoadMoreButton>
     );
   }
 }
-

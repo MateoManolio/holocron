@@ -21,6 +21,8 @@ class CharacterLoaded extends CharacterState {
   final String speciesFilter;
   final String statusFilter;
   final String sortOption;
+  final bool isSearchFocused;
+  final bool isFilterPopoverOpen;
 
   const CharacterLoaded({
     required this.allCharacters,
@@ -31,6 +33,8 @@ class CharacterLoaded extends CharacterState {
     this.speciesFilter = 'All',
     this.statusFilter = 'All',
     this.sortOption = 'Relevance',
+    this.isSearchFocused = false,
+    this.isFilterPopoverOpen = false,
   });
 
   @override
@@ -43,6 +47,8 @@ class CharacterLoaded extends CharacterState {
     speciesFilter,
     statusFilter,
     sortOption,
+    isSearchFocused,
+    isFilterPopoverOpen,
   ];
 
   CharacterLoaded copyWith({
@@ -54,6 +60,8 @@ class CharacterLoaded extends CharacterState {
     String? speciesFilter,
     String? statusFilter,
     String? sortOption,
+    bool? isSearchFocused,
+    bool? isFilterPopoverOpen,
   }) {
     return CharacterLoaded(
       allCharacters: allCharacters ?? this.allCharacters,
@@ -64,6 +72,8 @@ class CharacterLoaded extends CharacterState {
       speciesFilter: speciesFilter ?? this.speciesFilter,
       statusFilter: statusFilter ?? this.statusFilter,
       sortOption: sortOption ?? this.sortOption,
+      isSearchFocused: isSearchFocused ?? this.isSearchFocused,
+      isFilterPopoverOpen: isFilterPopoverOpen ?? this.isFilterPopoverOpen,
     );
   }
 }
@@ -76,4 +86,3 @@ class CharacterError extends CharacterState {
   @override
   List<Object?> get props => [message];
 }
-

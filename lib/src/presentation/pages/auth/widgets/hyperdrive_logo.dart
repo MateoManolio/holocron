@@ -12,8 +12,8 @@ class HyperdriveLogo extends StatelessWidget {
         shape: BoxShape.circle,
         gradient: RadialGradient(
           colors: [
-            const Color(0xFF6B4FFF).withOpacity(0.3),
-            const Color(0xFF6B4FFF).withOpacity(0.1),
+            const Color(0xFF6B4FFF).withValues(alpha: .3),
+            const Color(0xFF6B4FFF).withValues(alpha: .1),
             Colors.transparent,
           ],
         ),
@@ -27,4 +27,3 @@ class HyperdriveLogo extends StatelessWidget {
     );
   }
 }
-

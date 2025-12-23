@@ -22,25 +22,32 @@ class CharacterCard extends StatefulWidget {
 
 class _CharacterCardState extends State<CharacterCard>
     with TickerProviderStateMixin {
-  bool _isHovered = false;
+  final ValueNotifier<bool> _isHovered = ValueNotifier<bool>(false);
   late AnimationController _controller;
   late AnimationController _favoriteController;
   late Animation<double> _scaleAnimation;
+
+  static const int _animDurationMs = 150;
+  static const int _favoriteAnimDurationMs = 500;
+  static const double _initialScale = 1.0;
+  static const double _hoverScale = 1.05;
+  static const double _borderRadius = 16.0;
+  static const double _strokeWidth = 2.5;
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: _animDurationMs),
       vsync: this,
     );
     _favoriteController = AnimationController(
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: _favoriteAnimDurationMs),
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.05,
+      begin: _initialScale,
+      end: _hoverScale,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
@@ -58,6 +65,7 @@ class _CharacterCardState extends State<CharacterCard>
   void dispose() {
     _controller.dispose();
     _favoriteController.dispose();
+    _isHovered.dispose();
     super.dispose();
   }
 
@@ -67,162 +75,178 @@ class _CharacterCardState extends State<CharacterCard>
       onTap: widget.onTap,
       child: MouseRegion(
         onEnter: (_) {
-          setState(() => _isHovered = true);
+          _isHovered.value = true;
           _controller.forward();
         },
         onExit: (_) {
-          setState(() => _isHovered = false);
+          _isHovered.value = false;
           _controller.reverse();
         },
         child: ScaleTransition(
           scale: _scaleAnimation,
-          child: AnimatedBuilder(
-            animation: _favoriteController,
-            builder: (context, child) {
-              return CustomPaint(
-                foregroundPainter: BorderSpillPainter(
-                  progress: _favoriteController.value,
-                  color: AppTheme.imperialYellow,
-                  borderRadius: 16.0,
-                  strokeWidth: 2.5,
-                ),
-                child: Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: BoxDecoration(
-                    color: AppTheme.cardBackground,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: _isHovered
-                          ? AppTheme.holoBlue.withOpacity(0.5)
-                          : AppTheme.darkGray.withOpacity(0.3),
-                      width: 1.5,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isHovered,
+            builder: (context, isHovered, child) {
+              return AnimatedBuilder(
+                animation: _favoriteController,
+                builder: (context, child) {
+                  return CustomPaint(
+                    foregroundPainter: BorderSpillPainter(
+                      progress: _favoriteController.value,
+                      color: AppTheme.imperialYellow,
+                      borderRadius: _borderRadius,
+                      strokeWidth: _strokeWidth,
                     ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: widget.isFavorite
-                            ? AppTheme.imperialYellow
-                            : _isHovered
-                            ? AppTheme.holoBlue.withOpacity(0.2)
-                            : Colors.black.withOpacity(0.3),
-                        blurRadius: _isHovered ? 15 : 8,
-                        spreadRadius: _isHovered ? 1 : 0,
-                        offset: const Offset(0, 4),
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: BoxDecoration(
+                        color: AppTheme.cardBackground,
+                        borderRadius: BorderRadius.circular(_borderRadius),
+                        border: Border.all(
+                          color: isHovered
+                              ? AppTheme.holoBlue.withValues(alpha: .5)
+                              : AppTheme.darkGray.withValues(alpha: .3),
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: widget.isFavorite
+                                ? AppTheme.imperialYellow
+                                : isHovered
+                                ? AppTheme.holoBlue.withValues(alpha: .2)
+                                : Colors.black.withValues(alpha: .3),
+                            blurRadius: isHovered ? 15 : 8,
+                            spreadRadius: isHovered ? 1 : 0,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Stack(
-                      children: [
-                        // Character image
-                        Column(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(_borderRadius),
+                        child: Stack(
                           children: [
-                            AspectRatio(
-                              aspectRatio: 1,
-                              child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      AppTheme.darkGray.withOpacity(0.3),
-                                      AppTheme.cardBackground,
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                                child: Image.network(
-                                  widget.imagePath,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Center(
-                                      child: Icon(
-                                        Icons.person,
-                                        size: 60,
-                                        color: AppTheme.lightGray.withOpacity(
-                                          0.3,
-                                        ),
+                            Column(
+                              children: [
+                                AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppTheme.darkGray.withValues(
+                                            alpha: .3,
+                                          ),
+                                          AppTheme.cardBackground,
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
                                       ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                            // Character name
-                            Expanded(
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      AppTheme.cardBackground,
-                                      AppTheme.darkGray.withOpacity(0.8),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    widget.name,
-                                    style: AppTheme.heading3.copyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
                                     ),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
+                                    child: Image.network(
+                                      widget.imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Center(
+                                              child: Icon(
+                                                Icons.person,
+                                                size: 60,
+                                                color: AppTheme.lightGray
+                                                    .withValues(alpha: 0.3),
+                                              ),
+                                            );
+                                          },
+                                    ),
                                   ),
+                                ),
+
+                                Expanded(
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppTheme.cardBackground,
+                                          AppTheme.darkGray.withValues(
+                                            alpha: .8,
+                                          ),
+                                        ],
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                      ),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        widget.name,
+                                        style: AppTheme.heading3.copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            Positioned(
+                              top: 12,
+                              right: 12,
+                              child: Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: AppTheme.cardBackground.withValues(
+                                    alpha: .9,
+                                  ),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: widget.isFavorite
+                                        ? AppTheme.imperialYellow
+                                        : AppTheme.lightGray.withValues(
+                                            alpha: .3,
+                                          ),
+                                    width: 1.5,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: widget.isFavorite
+                                          ? AppTheme.imperialYellow.withValues(
+                                              alpha: .3,
+                                            )
+                                          : Colors.black.withValues(alpha: .2),
+                                      blurRadius: 8,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: Icon(
+                                  widget.isFavorite
+                                      ? Icons.favorite
+                                      : Icons.favorite_border,
+                                  color: widget.isFavorite
+                                      ? AppTheme.imperialYellow
+                                      : AppTheme.lightGray.withValues(
+                                          alpha: .6,
+                                        ),
+                                  size: 18,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        // Favorite button
-                        Positioned(
-                          top: 12,
-                          right: 12,
-                          child: Container(
-                            width: 36,
-                            height: 36,
-                            decoration: BoxDecoration(
-                              color: AppTheme.cardBackground.withOpacity(0.9),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: widget.isFavorite
-                                    ? AppTheme.imperialYellow
-                                    : AppTheme.lightGray.withOpacity(0.3),
-                                width: 1.5,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: widget.isFavorite
-                                      ? AppTheme.imperialYellow.withOpacity(0.3)
-                                      : Colors.black.withOpacity(0.2),
-                                  blurRadius: 8,
-                                  spreadRadius: 1,
-                                ),
-                              ],
-                            ),
-                            child: Icon(
-                              widget.isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: widget.isFavorite
-                                  ? AppTheme.imperialYellow
-                                  : AppTheme.lightGray.withOpacity(0.6),
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
+                  );
+                },
               );
             },
           ),
@@ -325,4 +349,3 @@ class BorderSpillPainter extends CustomPainter {
     return oldDelegate.progress != progress || oldDelegate.color != color;
   }
 }
-

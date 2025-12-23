@@ -26,7 +26,7 @@ class AnalyticsService {
       );
     } catch (e) {
       // Fallback to print if analytics fails
-      print('Analytics error: $e - Original error: $error');
+      debugPrint('Analytics error: $e - Original error: $error');
     }
   }
 
@@ -54,4 +54,3 @@ class AnalyticsService {
     }
   }
 }
-

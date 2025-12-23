@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../config/theme/app_theme.dart';
 import 'delete_confirmation_popover.dart';
+import 'metadata_grid.dart';
+import 'status_tag.dart';
 
 class DetailedCharacterCard extends StatelessWidget {
   final String name;
@@ -11,9 +13,15 @@ class DetailedCharacterCard extends StatelessWidget {
   final String birthYear;
   final int? height;
   final String? eyeColor;
-  final String? mass; // Added Mass stat instead
+  final String? mass;
   final List<String> affiliations;
   final VoidCallback? onDelete;
+
+  static const double _cardBorderRadius = 12.0;
+  static const double _cardBorderWidth = 1.5;
+  static const double _popoverWidth = 260.0;
+  static const double _popoverOffsetTop = 70.0;
+  static const double _iconSize = 16.0;
 
   const DetailedCharacterCard({
     super.key,
@@ -42,14 +50,11 @@ class DetailedCharacterCard extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     late OverlayEntry overlayEntry;
 
-    // Popover width is fixed at 260. Margin 4.
-    const popoverWidth = 260.0;
-
     // Calculate horizontal position
     double left;
     if (offset.dx > screenWidth / 2) {
       // Show to the left if button is on the right half of the screen
-      left = offset.dx - popoverWidth + size.width;
+      left = offset.dx - _popoverWidth + size.width;
     } else {
       // Show to the right if button is on the left half of the screen
       left = offset.dx;
@@ -66,7 +71,7 @@ class DetailedCharacterCard extends StatelessWidget {
           ),
           Positioned(
             left: left,
-            top: offset.dy + 70, // Moved down to avoid covering eyes/face
+            top: offset.dy + _popoverOffsetTop,
             child: DeleteConfirmationPopover(
               characterName: name,
               onDelete: () {
@@ -91,17 +96,15 @@ class DetailedCharacterCard extends StatelessWidget {
     return Container(
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground.withOpacity(0.4),
-        borderRadius: BorderRadius.circular(12),
+        color: AppTheme.cardBackground.withValues(alpha: .4),
+        borderRadius: BorderRadius.circular(_cardBorderRadius),
         border: Border.all(
-          color: AppTheme.imperialYellow.withOpacity(
-            0.5,
-          ), // Vibrant yellow border
-          width: 1.5, // Thicker border
+          color: AppTheme.imperialYellow.withValues(alpha: 0.5),
+          width: _cardBorderWidth,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.imperialYellow.withOpacity(0.2), // Noticeable glow
+            color: AppTheme.imperialYellow.withValues(alpha: .2),
             blurRadius: 15,
             spreadRadius: 1,
           ),
@@ -110,14 +113,13 @@ class DetailedCharacterCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image Section
           AspectRatio(
             aspectRatio: 1,
             child: Stack(
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(12),
+                    top: Radius.circular(_cardBorderRadius),
                   ),
                   child: Image.network(
                     imagePath,
@@ -131,14 +133,13 @@ class DetailedCharacterCard extends StatelessWidget {
                           child: Icon(
                             Icons.person,
                             size: 40,
-                            color: AppTheme.lightGray.withOpacity(0.3),
+                            color: AppTheme.lightGray.withValues(alpha: .3),
                           ),
                         ),
                       );
                     },
                   ),
                 ),
-                // Gradient overlay
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -146,13 +147,12 @@ class DetailedCharacterCard extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        AppTheme.cardBackground.withOpacity(0.8),
+                        AppTheme.cardBackground.withValues(alpha: .8),
                       ],
                     ),
                   ),
                 ),
 
-                // Delete button
                 Positioned(
                   top: 8,
                   right: 8,
@@ -171,8 +171,8 @@ class DetailedCharacterCard extends StatelessWidget {
                           ),
                           child: Icon(
                             Icons.close_rounded,
-                            color: Colors.white.withOpacity(0.3),
-                            size: 16,
+                            color: Colors.white.withValues(alpha: .3),
+                            size: _iconSize,
                           ),
                         ),
                       ),
@@ -183,11 +183,10 @@ class DetailedCharacterCard extends StatelessWidget {
             ),
           ),
 
-          // Content Section
           Flexible(
             child: ClipRRect(
               borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(12),
+                bottom: Radius.circular(_cardBorderRadius),
               ),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
@@ -211,16 +210,18 @@ class DetailedCharacterCard extends StatelessWidget {
                         spacing: 4,
                         runSpacing: 4,
                         children: [
-                          _Tag(label: species.toUpperCase(), isPrimary: true),
-                          _Tag(label: gender.toUpperCase()),
+                          StatusTag(
+                            label: species.toUpperCase(),
+                            isPrimary: true,
+                          ),
+                          StatusTag(label: gender.toUpperCase()),
                         ],
                       ),
                       const SizedBox(height: 12),
                       const Divider(color: Colors.white10, height: 1),
                       const SizedBox(height: 12),
 
-                      // Metadata grid
-                      _MetadataGrid(
+                      MetadataGrid(
                         homeworld: homeworld,
                         birthYear: birthYear,
                         height: height,
@@ -233,7 +234,7 @@ class DetailedCharacterCard extends StatelessWidget {
                         Text(
                           'AFFILIATIONS',
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.white.withValues(alpha: .3),
                             fontSize: 8,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 0.5,
@@ -245,8 +246,10 @@ class DetailedCharacterCard extends StatelessWidget {
                           runSpacing: 4,
                           children: affiliations
                               .map(
-                                (a) =>
-                                    _Tag(label: a.toUpperCase(), fontSize: 8),
+                                (a) => StatusTag(
+                                  label: a.toUpperCase(),
+                                  fontSize: 8,
+                                ),
                               )
                               .toList(),
                         ),
@@ -259,139 +262,6 @@ class DetailedCharacterCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _MetadataGrid extends StatelessWidget {
-  final String homeworld;
-  final String birthYear;
-  final int? height;
-  final String? eyeColor;
-  final String? mass;
-
-  const _MetadataGrid({
-    required this.homeworld,
-    required this.birthYear,
-    this.height,
-    this.eyeColor,
-    this.mass,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: _MetadataRow(label: 'HOMEWORLD', value: homeworld),
-            ),
-            Expanded(
-              child: _MetadataRow(label: 'BIRTH YEAR', value: birthYear),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: _MetadataRow(
-                label: 'HEIGHT',
-                value: height != null ? '${height}cm' : 'UNKNOWN',
-              ),
-            ),
-            Expanded(
-              child: _MetadataRow(
-                label: 'EYE COLOR',
-                value: eyeColor?.toUpperCase() ?? 'UNKNOWN',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: _MetadataRow(
-                label: 'MASS',
-                value: mass != null ? '${mass}kg' : 'UNKNOWN',
-              ),
-            ),
-            const Expanded(child: SizedBox()),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _Tag extends StatelessWidget {
-  final String label;
-  final bool isPrimary;
-  final double fontSize;
-
-  const _Tag({required this.label, this.isPrimary = false, this.fontSize = 10});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-      decoration: BoxDecoration(
-        color: isPrimary
-            ? AppTheme.terminalGreen.withOpacity(0.1)
-            : Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(
-          color: isPrimary
-              ? AppTheme.terminalGreen.withOpacity(0.3)
-              : Colors.white.withOpacity(0.1),
-        ),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isPrimary ? AppTheme.terminalGreen : Colors.white60,
-          fontSize: fontSize,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
-
-class _MetadataRow extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _MetadataRow({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.3),
-            fontSize: 8,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 0.5,
-          ),
-        ),
-        const SizedBox(height: 1),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 10,
-            fontWeight: FontWeight.w500,
-          ),
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
     );
   }
 }

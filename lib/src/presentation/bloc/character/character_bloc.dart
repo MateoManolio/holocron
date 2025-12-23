@@ -16,6 +16,8 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     on<SearchCharacters>(_onSearchCharacters);
     on<FilterCharacters>(_onFilterCharacters);
     on<SortCharacters>(_onSortCharacters);
+    on<SearchFocusChanged>(_onSearchFocusChanged);
+    on<FilterPopoverToggled>(_onFilterPopoverToggled);
   }
 
   Future<void> _onFetchCharacters(
@@ -195,7 +197,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
     }
 
     // 5. Sorting
-    // To sort, we need a mutable list
     filtered = List<Character>.from(filtered);
 
     switch (sortOption) {
@@ -203,7 +204,6 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         filtered.sort((a, b) => a.name.compareTo(b.name));
         break;
       case 'Newest':
-        // Assuming ID represents add order (higher is newer)
         filtered.sort((a, b) => b.id.compareTo(a.id));
         break;
       case 'Oldest':
@@ -211,11 +211,28 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         break;
       case 'Relevance':
       default:
-        // Do nothing or default sort
         break;
     }
 
     return filtered;
+  }
+
+  void _onSearchFocusChanged(
+    SearchFocusChanged event,
+    Emitter<CharacterState> emit,
+  ) {
+    final currentState = state;
+    if (currentState is! CharacterLoaded) return;
+    emit(currentState.copyWith(isSearchFocused: event.isFocused));
+  }
+
+  void _onFilterPopoverToggled(
+    FilterPopoverToggled event,
+    Emitter<CharacterState> emit,
+  ) {
+    final currentState = state;
+    if (currentState is! CharacterLoaded) return;
+    emit(currentState.copyWith(isFilterPopoverOpen: event.isOpen));
   }
 
   String _mapErrorToMessage(dynamic e) {
@@ -225,4 +242,3 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
         .replaceAll('ServerException: ', '');
   }
 }
-

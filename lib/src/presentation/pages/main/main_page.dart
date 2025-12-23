@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../config/theme/app_theme.dart';
 import '../../widgets/widgets.dart';
 import '../home/home_page.dart';
 import '../favorites/favorites_page.dart';
 import '../home/widgets/holocron_app_bar.dart';
+import '../../bloc/main/main_bloc.dart';
+import '../../bloc/main/main_event.dart';
+import '../../bloc/main/main_state.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -13,13 +17,18 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final PageController _pageController = PageController();
-  int _selectedIndex = 0;
+  late PageController _pageController;
 
-  void _onPageChanged(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   void _onOptionSelected(int index) {
@@ -31,32 +40,39 @@ class _MainPageState extends State<MainPage> {
   }
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.spaceBlack,
-      extendBodyBehindAppBar: true,
-      appBar: HolocronAppBar(
-        selectedIndex: _selectedIndex,
-        onOptionSelected: _onOptionSelected,
-      ),
-      body: Stack(
-        children: [
-          const StarfieldBackground(),
-          PageView(
-            controller: _pageController,
-            onPageChanged: _onPageChanged,
-            physics: const BouncingScrollPhysics(),
-            children: const [HomePage(), FavoritesPage()],
+    return BlocConsumer<MainBloc, MainState>(
+      listener: (context, state) {
+        if (_pageController.hasClients &&
+            _pageController.page?.round() != state.selectedIndex) {
+          _onOptionSelected(state.selectedIndex);
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppTheme.spaceBlack,
+          extendBodyBehindAppBar: true,
+          appBar: HolocronAppBar(
+            selectedIndex: state.selectedIndex,
+            onOptionSelected: (index) {
+              context.read<MainBloc>().add(MainTabChanged(index));
+            },
           ),
-        ],
-      ),
+          body: Stack(
+            children: [
+              const StarfieldBackground(),
+              PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  context.read<MainBloc>().add(MainTabChanged(index));
+                },
+                physics: const BouncingScrollPhysics(),
+                children: const [HomePage(), FavoritesPage()],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
-

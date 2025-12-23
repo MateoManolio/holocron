@@ -20,8 +20,8 @@ class AuthBackground extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withOpacity(0.7),
-              Colors.black.withOpacity(0.85),
+              Colors.black.withValues(alpha: .7),
+              Colors.black.withValues(alpha: .85),
             ],
           ),
         ),
@@ -30,4 +30,3 @@ class AuthBackground extends StatelessWidget {
     );
   }
 }
-

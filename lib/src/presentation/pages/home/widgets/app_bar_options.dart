@@ -75,7 +75,7 @@ class _AppBarOptionItemState extends State<_AppBarOptionItem> {
                   ? AppTheme.holoBlue
                   : _isHovered
                   ? AppTheme.lightGray
-                  : AppTheme.lightGray.withOpacity(0.6),
+                  : AppTheme.lightGray.withValues(alpha: .6),
               fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.w500,
               fontSize: 13,
               letterSpacing: 1,
@@ -86,4 +86,3 @@ class _AppBarOptionItemState extends State<_AppBarOptionItem> {
     );
   }
 }
-

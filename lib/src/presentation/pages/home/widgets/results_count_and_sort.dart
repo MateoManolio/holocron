@@ -4,18 +4,12 @@ import '../../../../config/theme/app_theme.dart';
 import '../../../../presentation/bloc/character/character_bloc.dart';
 import '../../../../presentation/bloc/character/character_event.dart';
 import '../../../../presentation/bloc/character/character_state.dart';
+import '../../../../core/constants/sort_constants.dart';
 
-class ResultsHeader extends StatefulWidget {
+class ResultsCountAndSort extends StatelessWidget {
   final int resultsCount;
 
-  const ResultsHeader({super.key, required this.resultsCount});
-
-  @override
-  State<ResultsHeader> createState() => _ResultsHeaderState();
-}
-
-class _ResultsHeaderState extends State<ResultsHeader> {
-  final List<String> _sortOptions = ['Relevance', 'Name', 'Newest', 'Oldest'];
+  const ResultsCountAndSort({super.key, required this.resultsCount});
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +24,16 @@ class _ResultsHeaderState extends State<ResultsHeader> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // "Showing X results"
               RichText(
                 text: TextSpan(
                   style: AppTheme.bodyText.copyWith(
                     fontSize: 14,
-                    color: AppTheme.lightGray.withOpacity(0.7),
+                    color: AppTheme.lightGray.withValues(alpha: 0.7),
                   ),
                   children: [
                     const TextSpan(text: 'Showing '),
                     TextSpan(
-                      text: '${widget.resultsCount}',
+                      text: '$resultsCount',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -51,29 +44,28 @@ class _ResultsHeaderState extends State<ResultsHeader> {
                 ),
               ),
 
-              // "Sort by: [Dropdown]"
               Row(
                 children: [
                   Text(
                     'Sort by: ',
                     style: AppTheme.bodyText.copyWith(
                       fontSize: 14,
-                      color: AppTheme.lightGray.withOpacity(0.7),
+                      color: AppTheme.lightGray.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
-                      color: AppTheme.cardBackground.withOpacity(0.8),
+                      color: AppTheme.cardBackground.withValues(alpha: 0.8),
                       borderRadius: BorderRadius.circular(25),
                       border: Border.all(
-                        color: AppTheme.holoBlue.withOpacity(0.1),
+                        color: AppTheme.holoBlue.withValues(alpha: 0.1),
                         width: 1.5,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.holoBlue.withOpacity(0.03),
+                          color: AppTheme.holoBlue.withValues(alpha: 0.03),
                           blurRadius: 15,
                           spreadRadius: 0,
                         ),
@@ -103,7 +95,9 @@ class _ResultsHeaderState extends State<ResultsHeader> {
                           }
                         },
                         selectedItemBuilder: (BuildContext context) {
-                          return _sortOptions.map<Widget>((String item) {
+                          return SortConstants.characterOptions.map<Widget>((
+                            String item,
+                          ) {
                             return Container(
                               alignment: Alignment.centerLeft,
                               child: Text(
@@ -117,14 +111,14 @@ class _ResultsHeaderState extends State<ResultsHeader> {
                             );
                           }).toList();
                         },
-                        items: _sortOptions.map<DropdownMenuItem<String>>((
-                          String value,
-                        ) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+                        items: SortConstants.characterOptions
+                            .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            })
+                            .toList(),
                       ),
                     ),
                   ),
@@ -137,4 +131,3 @@ class _ResultsHeaderState extends State<ResultsHeader> {
     );
   }
 }
-

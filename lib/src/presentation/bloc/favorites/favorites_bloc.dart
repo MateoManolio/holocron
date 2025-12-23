@@ -110,7 +110,6 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
         sorted.sort((a, b) => b.name.compareTo(a.name));
         break;
       case 'Newest':
-        // Assuming ID represents add order or freshness
         sorted.sort((a, b) => b.id.compareTo(a.id));
         break;
       case 'Oldest':
@@ -118,10 +117,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
         break;
       case 'Default':
       default:
-        // Default order
         break;
     }
     return sorted;
   }
 }
-

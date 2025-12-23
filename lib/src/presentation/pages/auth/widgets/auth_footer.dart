@@ -11,7 +11,7 @@ class AuthFooter extends StatelessWidget {
           bottom: 16,
           left: 16,
           child: Text(
-            'v.0.1.0',
+            'v.1.1.0',
             style: TextStyle(color: Colors.grey.shade600, fontSize: 10),
           ),
         ),
@@ -27,4 +27,3 @@ class AuthFooter extends StatelessWidget {
     );
   }
 }
-

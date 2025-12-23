@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/usecase/auth_usecases.dart';
@@ -11,6 +12,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInUseCase _signInUseCase;
   final SignUpUseCase _signUpUseCase;
   final SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   StreamSubscription<UserEntity?>? _authSubscription;
 
@@ -31,6 +37,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthGuestLoginRequested>(_onGuestLoginRequested);
+    on<AuthNavigateToLoginRequested>(_onNavigateToLogin);
+    on<AuthNavigateToSignupRequested>(_onNavigateToSignup);
+    on<AuthProfileMenuRequested>(_onProfileMenuRequested);
     on<_AuthUserChanged>(_onUserChanged);
   }
 
@@ -38,7 +47,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final newState = event.user != null
         ? AuthState.authenticated(event.user!)
         : const AuthState.unauthenticated();
-    // Reset loading state when user changes
+    // Reset loading state and clear controllers on success
+    if (event.user != null) {
+      emailController.clear();
+      passwordController.clear();
+      confirmPasswordController.clear();
+    }
     emit(newState.copyWith(isLoading: false));
   }
 
@@ -63,10 +77,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) return;
+
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
-      await _signInUseCase(event.email, event.password);
-      // The stream will update the state
+      await _signInUseCase(email, password);
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
@@ -76,10 +94,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthSignUpRequested event,
     Emitter<AuthState> emit,
   ) async {
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) return;
+
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
-      await _signUpUseCase(event.email, event.password);
-      // The stream will update the state
+      await _signUpUseCase(email, password);
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
@@ -92,22 +114,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
       await _signInAnonymouslyUseCase();
-      // The stream will update the state
     } catch (e) {
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
+    }
+  }
+
+  void _onNavigateToLogin(
+    AuthNavigateToLoginRequested event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(state.copyWith(navigationTarget: AuthNavigationTarget.login));
+    // Reset navigation target immediately after emitting
+    emit(state.copyWith(navigationTarget: AuthNavigationTarget.none));
+  }
+
+  void _onNavigateToSignup(
+    AuthNavigateToSignupRequested event,
+    Emitter<AuthState> emit,
+  ) {
+    emit(state.copyWith(navigationTarget: AuthNavigationTarget.signup));
+    emit(state.copyWith(navigationTarget: AuthNavigationTarget.none));
+  }
+
+  void _onProfileMenuRequested(
+    AuthProfileMenuRequested event,
+    Emitter<AuthState> emit,
+  ) {
+    if (state.user?.isGuest == true) {
+      add(AuthNavigateToLoginRequested());
     }
   }
 
   @override
   Future<void> close() {
     _authSubscription?.cancel();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
     return super.close();
   }
 }
 
-// Private event for internal stream updates
 class _AuthUserChanged extends AuthEvent {
   final UserEntity? user;
   const _AuthUserChanged(this.user);
 }
-
