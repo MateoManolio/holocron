@@ -1,52 +1,65 @@
 # Holocron - Star Wars Flutter App
 
+![Star Wars](https://img.shields.io/badge/Star%20Wars-Galaxy-yellow)
+![Flutter](https://img.shields.io/badge/Flutter-^3.10.3-blue)
+![Architecture](https://img.shields.io/badge/Architecture-Clean-green)
+![License](https://img.shields.io/badge/License-MIT-purple)
+
 ## 📱 Descripción
-Aplicación Flutter inspirada en Star Wars con un diseño moderno y elegante para explorar personajes de la galaxia.
+Holocron es una aplicación Flutter de vanguardia inspirada en el universo de Star Wars. Diseñada con una estética premium y micro-animaciones fluidas, permite a los usuarios explorar la vasta galaxia de personajes, gestionar favoritos y sincronizar datos en tiempo real entre almacenamiento local (Hive) y la nube (Cloud Firestore).
 
-## 🎨 Características de Diseño
+Este proyecto sirve como una vitrina de mejores prácticas en desarrollo Flutter, implementando Clean Architecture, State Management con BLoC y un sistema de sincronización híbrido robusto.
 
-### Tema Star Wars
-- **Paleta de colores**: Colores oscuros espaciales con amarillo imperial y azul holográfico
-- **Animaciones**: Micro-animaciones en todos los componentes interactivos
-- **Efectos visuales**: Fondo animado de estrellas en movimiento
+## 🚀 Características Principales
 
-### Componentes Implementados
+### 🌌 Exploración Galáctica
+- **Búsqueda Inteligente**: Filtrado de personajes en tiempo real con debouncing optimizado.
+- **Paginación Infinita**: Sistema "Load More" para navegar por toda la base de datos de SWAPI.
+- **Visualización Detallada**: Tarjetas interactivas con efectos de hover y animaciones de escala.
 
-#### 1. **HolocronAppBar**
-- Header personalizado con logo animado
-- Opciones de navegación: CHARACTERS y FAVORITES
-- Botón de perfil con efectos hover
-- Sistema modular para agregar más opciones en el futuro
+### 🔐 Autenticación y Perfil
+- **Firebase Auth**: Soporte para autenticación segura.
+- **Modo Invitado**: Acceso limitado para usuarios no autenticados con persistencia local única.
+- **Interfaz de Usuario**: Pantallas de Login y Sign-up con diseño inmersivo.
 
-#### 2. **HeroSection**
-- Título grande "Explore the Galaxy"
-- Subtítulo descriptivo
-- Campo de búsqueda con animaciones de foco
-- Ícono de filtros (tune)
+### 💾 Sincronización Híbrida (Hybrid Data Sync)
+- **Offline First**: Uso de **Hive (CE)** para persistencia local ultrarrápida.
+- **Sincronización en la Nube**: Integración con **Cloud Firestore** para usuarios autenticados.
+- **Consistencia de Datos**: Los favoritos se mantienen sincronizados automáticamente cuando se recupera la conexión.
 
-#### 3. **ResultsHeader**
-- Muestra cantidad de resultados ("Showing X results")
-- Selector de ordenamiento (Sort by)
-- Diseño responsivo
+### 🎨 Experiencia de Usuario Premium
+- **Fondo de Estrellas Animado**: Un `CustomPainter` optimizado que genera un campo de estrellas en movimiento infinito.
+- **Diseño Glassmorphism**: Uso de gradientes, efectos de brillo (glow) y opacidades dinámicas.
+- **Micro-animaciones**: Transiciones fluidas en botones, tarjetas y elementos de navegación.
 
-#### 4. **CharacterCard**
-- Tarjetas de personajes con imágenes
-- Botón de favoritos con ícono de corazón
-- Animaciones hover y efectos de escala
-- Gradientes en el fondo del nombre
+## 🛠️ Stack Tecnológico
 
-#### 5. **LoadMoreButton**
-- Botón estilizado para cargar más contenido
-- Estados: normal, hover y loading
-- Animaciones de escala al interactuar
-- Ícono de refresh animado
+- **Core**: Flutter & Dart
+- **State Management**: [flutter_bloc](https://pub.dev/packages/flutter_bloc)
+- **Dependency Injection**: [get_it](https://pub.dev/packages/get_it)
+- **Networking**: [dio](https://pub.dev/packages/dio)
+- **Local Database**: [hive_ce](https://pub.dev/packages/hive_ce)
+- **Backend/Service**: Firebase (Auth & Firestore)
+- **Error Tracking**: [Sentry](https://sentry.io/)
+- **Testing**: Mocktail & Bloc Test
 
-#### 6. **AppFooter**
-- Logo y nombre de la app
-- Descripción breve
-- Links de navegación (About, Privacy, etc.)
-- Copyright y atribución de Star Wars
-- Diseño con gradientes y dividers
+## 🏗️ Arquitectura
+
+El proyecto sigue los principios de **Clean Architecture**, dividiendo la aplicación en tres capas principales:
+
+### 1. Domain (Capa de Negocio)
+- **Entities**: Modelos de datos puros.
+- **Repositories**: Contratos (interfaces) de datos.
+- **Use Cases**: Lógica de negocio específica.
+
+### 2. Data (Capa de Infraestructura)
+- **Repositories Implementation**: Implementación de los contratos del dominio.
+- **DataSources**: Acceso a datos remotos (API) y locales (Database).
+- **Models**: DTOs para serialización de datos.
+
+### 3. Presentation (Capa de UI)
+- **BLoC**: Lógica de estado y eventos.
+- **Pages/Widgets**: Componentes visuales y pantallas.
 
 ## 📁 Estructura del Proyecto
 
@@ -54,152 +67,66 @@ Aplicación Flutter inspirada en Star Wars con un diseño moderno y elegante par
 lib/
 ├── main.dart
 └── src/
-    ├── config/
-    │   └── theme/
-    │       └── app_theme.dart              # Tema Star Wars
-    ├── presentation/
-    │   ├── pages/
-    │   │   └── home/
-    │   │       ├── home_page.dart          # Página principal
-    │   │       └── widgets/
-    │   │           ├── holocron_app_bar.dart
-    │   │           ├── app_bar_options.dart
-    │   │           ├── profile_button.dart
-    │   │           ├── hero_section.dart
-    │   │           ├── search_input.dart
-    │   │           ├── results_header.dart
-    │   │           ├── character_card.dart
-    │   │           ├── load_more_button.dart
-    │   │           └── app_footer.dart
-    │   └── widgets/
-    │       ├── starfield_background.dart   # Fondo animado
-    │       └── widgets.dart                # Barrel file
-    ├── domain/
-    └── data/
-
-assets/
-└── people/                                 # Imágenes de personajes
-    ├── c3po.png
-    ├── chewby.png
-    ├── kenobi.png
-    ├── leia.png
-    ├── luke.png
-    ├── r2d2.png
-    ├── solo.png
-    └── vader.png
+    ├── config/             # Configuración de Temas y Rutas
+    ├── core/               # Utilidades, Constantes, DI y Servicios base
+    ├── data/               # Repos y DataSources (Implementación)
+    ├── domain/             # Entidades, Contratos y Casos de Uso
+    └── presentation/       # BLoCs y UI Widgets
 ```
 
-## 🎯 Mejores Prácticas Implementadas
+## 🔧 Configuración y Ejecución
 
-### 1. Modularización Extrema
-- Cada widget en su propio archivo
-- Un widget público por archivo
-- Widgets privados (`_WidgetName`) solo para componentes internos pequeños
-- Separación clara de responsabilidades
+### Prerrequisitos
+- Flutter SDK (>= 3.10.3)
+- Una cuenta de Firebase
 
-### 2. Animaciones
-- `TweenAnimationBuilder` para animaciones de entrada
-- `AnimationController` para animaciones continuas (fondo de estrellas)
-- `ScaleTransition` en botones y tarjetas
-- Efectos hover con `MouseRegion`
-- Animaciones de presión con `GestureDetector`
+### Pasos
+1. **Clonar el repositorio**:
+   ```bash
+   git clone https://github.com/tu-usuario/holocron.git
+   cd holocron
+   ```
 
-### 3. Diseño Star Wars
-- Gradientes en todos los elementos
-- Glow effects con `BoxShadow`
-- Colores temáticos consistentes
-- Tipografía con spacing amplio (letterSpacing)
-- Uso de `withValues(alpha:)` para opacidad en Flutter 3.10+
+2. **Instalar dependencias**:
+   ```bash
+   flutter pub get
+   ```
 
-### 4. Performance
-- Constructores `const` donde es posible
-- `RepaintBoundary` implícito en CustomPainter
-- Animaciones optimizadas con curves
-- `SingleTickerProviderStateMixin` para animaciones eficientes
-- GridView con `physics: NeverScrollableScrollPhysics()` dentro de ScrollView
+3. **Configuración de Firebase**:
+   - Sigue las instrucciones detalladas en [FIREBASE_SETUP.md](file:///c:/Users/Mateo/Documents/Aplicaciones/holocron/FIREBASE_SETUP.md).
+   - Asegúrate de tener el archivo `.env` configurado.
 
-### 5. Código Limpio
-- Nombres descriptivos
-- Comentarios explicativos
-- Separación de datos mock del UI
-- Preparado para implementar state management
+4. **Ejecutar la app**:
+   ```bash
+   flutter run
+   ```
 
-## 🚀 Componentes por Implementar
+## 🧪 Testing
 
-### Lógica (próximos pasos):
-1. **State Management**: Implementar provider, riverpod o bloc
-2. **Búsqueda real**: Conectar input con filtrado de personajes
-3. **Favoritos**: Implementar sistema de favoritos persistente
-4. **Sorting**: Implementar diferentes opciones de ordenamiento
-5. **Paginación**: Implementar carga dinámica con Load More
-6. **Navegación**: Routing a páginas de detalle de personajes
-
-## 🎨 Customización
-
-### Cambiar colores
-Edita `lib/src/config/theme/app_theme.dart`:
-```dart
-static const Color spaceBlack = Color(0xFF0A0E27);
-static const Color imperialYellow = Color(0xFFFFE81F);
-static const Color holoBlue = Color(0xFF4DA6FF);
-```
-
-### Ajustar animaciones
-Modifica las duraciones en cada widget:
-```dart
-duration: const Duration(milliseconds: 600),
-```
-
-### Agregar más opciones al AppBar
-Edita `app_bar_options.dart`:
-```dart
-final List<String> _options = ['CHARACTERS', 'FAVORITES', 'NEW_OPTION'];
-```
-
-## 🖼️ Assets
-
-Las imágenes de personajes están en `assets/people/`:
-- Luke Skywalker
-- Darth Vader
-- Princess Leia
-- C-3PO
-- Obi-Wan Kenobi
-- Chewbacca
-- Han Solo
-- R2-D2
-
-Para agregar más personajes, solo añade la imagen en la carpeta y actualiza el array en `home_page.dart`.
-
-## 📝 Notas Técnicas
-
-- **Flutter Version**: 3.10.3+
-- **Material Design**: 3
-- **Estado actual**: Solo UI, sin lógica de negocio
-- **Responsive**: Diseñado para desktop/tablet (4 columnas en grid)
-- **Assets**: Configurados en `pubspec.yaml`
-
-## 🌟 Características Destacadas
-
-- ✅ Fondo animado de estrellas en movimiento continuo
-- ✅ Gradientes personalizados en todos los componentes
-- ✅ Sistema de colores completamente temático
-- ✅ Animaciones fluidas en cada interacción
-- ✅ Modularización extrema para fácil mantenimiento
-- ✅ Preparado para escalar con state management
-- ✅ Sin lógica implementada - solo visual
-
-## 🔧 Cómo Ejecutar
+El proyecto cuenta con una amplia cobertura de tests (Unitarios y de Widgets).
 
 ```bash
-# Obtener dependencias
-flutter pub get
-
-# Ejecutar en dispositivo/emulador
-flutter run
-
-# Ejecutar en web
-flutter run -d chrome
-
-# Ejecutar en Windows
-flutter run -d windows
+# Ejecutar todos los tests
+flutter test
 ```
+
+Los tests se encuentran en el directorio `/test` y siguen la misma estructura que la capa `lib`.
+
+## 📝 Notas de Versión
+- **Current Version**: 0.1.0
+- **Status**: En desarrollo activo. Las features principales de exploración y favoritos están funcionales.
+
+## 🖼️ Assets y Multimedia
+
+### Personajes
+Las imágenes de personajes se encuentran en `assets/people/`. El sistema está preparado para cargar imágenes dinámicamente basadas en el nombre del personaje.
+
+### Fondos y Efectos
+- **Hyperspace**: Ubicado en `assets/background/hyperspace.png`, utilizado para efectos de transición y carga.
+- **Starfield**: Generado procedimentalmente mediante código para un rendimiento óptimo.
+
+## 🌟 Contribuir
+Siéntete libre de abrir issues o enviar pull requests si tienes ideas para mejorar el Holocron.
+
+---
+*Que la Fuerza te acompañe.*
