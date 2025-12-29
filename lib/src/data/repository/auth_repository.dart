@@ -2,11 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/contracts/i_auth_repository.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../core/error/exceptions.dart';
+import '../../core/services/error_reporting_service.dart';
 
 class AuthRepository implements IAuthRepository {
   final FirebaseAuth _firebaseAuth;
+  final ErrorReportingService _errorReporting;
 
-  AuthRepository(this._firebaseAuth);
+  AuthRepository(this._firebaseAuth, this._errorReporting);
 
   @override
   Stream<UserEntity?> get user {
@@ -32,9 +34,19 @@ class AuthRepository implements IAuthRepository {
         throw ServerException(message: 'User not found after sign in');
       }
       return _mapFirebaseUserToUserEntity(userCredential.user!)!;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_sign_in',
+      );
       throw ServerException(message: e.message ?? 'Authentication failed');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_sign_in',
+      );
       throw ServerException(message: e.toString());
     }
   }
@@ -50,9 +62,19 @@ class AuthRepository implements IAuthRepository {
         throw ServerException(message: 'User not found after sign up');
       }
       return _mapFirebaseUserToUserEntity(userCredential.user!)!;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_sign_up',
+      );
       throw ServerException(message: e.message ?? 'Sign up failed');
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_sign_up',
+      );
       throw ServerException(message: e.toString());
     }
   }
@@ -67,11 +89,21 @@ class AuthRepository implements IAuthRepository {
         );
       }
       return _mapFirebaseUserToUserEntity(userCredential.user!)!;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_sign_in_anonymous',
+      );
       throw ServerException(
         message: e.message ?? 'Anonymous authentication failed',
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_sign_in_anonymous',
+      );
       throw ServerException(message: e.toString());
     }
   }
@@ -80,7 +112,12 @@ class AuthRepository implements IAuthRepository {
   Future<void> signOut() async {
     try {
       await _firebaseAuth.signOut();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_sign_out',
+      );
       throw ServerException(message: e.toString());
     }
   }
@@ -94,4 +131,3 @@ class AuthRepository implements IAuthRepository {
     );
   }
 }
-

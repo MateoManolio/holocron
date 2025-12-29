@@ -3,6 +3,7 @@ import '../../../domain/usecase/add_favorite_usecase.dart';
 import '../../../domain/usecase/clear_favorites_usecase.dart';
 import '../../../domain/usecase/get_favorites_usecase.dart';
 import '../../../domain/usecase/remove_favorite_usecase.dart';
+import '../../../core/services/error_reporting_service.dart';
 import '../../../../src/domain/entities/character.dart';
 import 'favorites_event.dart';
 import 'favorites_state.dart';
@@ -12,16 +13,19 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   final AddFavoriteUseCase _addFavoriteUseCase;
   final RemoveFavoriteUseCase _removeFavoriteUseCase;
   final ClearFavoritesUseCase _clearFavoritesUseCase;
+  final ErrorReportingService _errorReporting;
 
   FavoritesBloc({
     required GetFavoritesUseCase getFavoritesUseCase,
     required AddFavoriteUseCase addFavoriteUseCase,
     required RemoveFavoriteUseCase removeFavoriteUseCase,
     required ClearFavoritesUseCase clearFavoritesUseCase,
+    required ErrorReportingService errorReporting,
   }) : _getFavoritesUseCase = getFavoritesUseCase,
        _addFavoriteUseCase = addFavoriteUseCase,
        _removeFavoriteUseCase = removeFavoriteUseCase,
        _clearFavoritesUseCase = clearFavoritesUseCase,
+       _errorReporting = errorReporting,
        super(FavoritesInitial()) {
     on<LoadFavorites>(_onLoadFavorites);
     on<AddToFavorites>(_onAddToFavorites);
@@ -38,7 +42,12 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     try {
       final favorites = await _getFavoritesUseCase.call();
       emit(FavoritesLoaded(favorites: favorites));
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'favorites_bloc_load',
+      );
       emit(FavoritesError('Failed to load favorites: $e'));
     }
   }
@@ -50,7 +59,12 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     try {
       await _addFavoriteUseCase.call(event.character);
       add(LoadFavorites());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'favorites_bloc_add',
+      );
       emit(FavoritesError('Failed to add to favorites: $e'));
     }
   }
@@ -62,7 +76,12 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     try {
       await _removeFavoriteUseCase.call(event.id);
       add(LoadFavorites());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'favorites_bloc_remove',
+      );
       emit(FavoritesError('Failed to remove from favorites: $e'));
     }
   }
@@ -74,7 +93,12 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     try {
       await _clearFavoritesUseCase.call();
       add(LoadFavorites());
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'favorites_bloc_clear',
+      );
       emit(FavoritesError('Failed to clear favorites: $e'));
     }
   }

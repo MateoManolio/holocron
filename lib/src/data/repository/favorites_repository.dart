@@ -1,5 +1,5 @@
 import 'package:holocron/src/domain/entities/character.dart';
-import '../../core/services/analytics_service.dart';
+import '../../core/services/error_reporting_service.dart';
 import '../../core/services/auth_service.dart';
 import '../../domain/contracts/i_favorites_repository.dart';
 import '../datasource/interfaces/i_favorites_local_service.dart';
@@ -9,17 +9,17 @@ class FavoritesRepository implements IFavoritesRepository {
   final IFavoritesDataSource _localDataSource;
   final IFavoritesDataSource? _remoteDataSource;
   final AuthService _authService;
-  final AnalyticsService _analytics;
+  final ErrorReportingService _errorReporting;
 
   FavoritesRepository({
     required IFavoritesDataSource localDataSource,
     IFavoritesDataSource? remoteDataSource,
     required AuthService authService,
-    required AnalyticsService analytics,
+    required ErrorReportingService errorReporting,
   }) : _localDataSource = localDataSource,
        _remoteDataSource = remoteDataSource,
        _authService = authService,
-       _analytics = analytics;
+       _errorReporting = errorReporting;
 
   CharacterModel _toModel(Character character) {
     return CharacterModel(
@@ -58,10 +58,11 @@ class FavoritesRepository implements IFavoritesRepository {
 
     // Sync to cloud if user is authenticated
     if (_shouldSyncToCloud && _remoteDataSource != null) {
-      _remoteDataSource.saveFavorite(model).catchError((e) {
-        _analytics.logSyncError(
+      _remoteDataSource.saveFavorite(model).catchError((e, stackTrace) {
+        _errorReporting.logSyncError(
           operation: 'background_save_favorite',
           error: e.toString(),
+          stackTrace: stackTrace,
         );
       });
     }
@@ -76,10 +77,11 @@ class FavoritesRepository implements IFavoritesRepository {
         if (remoteFavorites.isNotEmpty) {
           return remoteFavorites;
         }
-      } catch (e) {
-        await _analytics.logSyncError(
+      } catch (e, stackTrace) {
+        await _errorReporting.logSyncError(
           operation: 'get_favorites_cloud',
           error: e.toString(),
+          stackTrace: stackTrace,
         );
       }
     }
@@ -96,10 +98,11 @@ class FavoritesRepository implements IFavoritesRepository {
     if (_shouldSyncToCloud && _remoteDataSource != null) {
       try {
         return await _remoteDataSource.containsFavorite(id);
-      } catch (e) {
-        await _analytics.logSyncError(
+      } catch (e, stackTrace) {
+        await _errorReporting.logSyncError(
           operation: 'check_favorite_remote',
           error: e.toString(),
+          stackTrace: stackTrace,
         );
       }
     }
@@ -114,10 +117,11 @@ class FavoritesRepository implements IFavoritesRepository {
 
     // Remove from cloud if authenticated
     if (_shouldSyncToCloud && _remoteDataSource != null) {
-      _remoteDataSource.removeFavorite(id).catchError((e) {
-        _analytics.logSyncError(
+      _remoteDataSource.removeFavorite(id).catchError((e, stackTrace) {
+        _errorReporting.logSyncError(
           operation: 'background_remove_favorite',
           error: e.toString(),
+          stackTrace: stackTrace,
         );
       });
     }
@@ -130,10 +134,11 @@ class FavoritesRepository implements IFavoritesRepository {
 
     // Clear cloud if authenticated
     if (_shouldSyncToCloud && _remoteDataSource != null) {
-      _remoteDataSource.clearFavorites().catchError((e) {
-        _analytics.logSyncError(
+      _remoteDataSource.clearFavorites().catchError((e, stackTrace) {
+        _errorReporting.logSyncError(
           operation: 'background_clear_favorites',
           error: e.toString(),
+          stackTrace: stackTrace,
         );
       });
     }

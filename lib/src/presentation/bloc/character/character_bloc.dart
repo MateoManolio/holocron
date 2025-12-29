@@ -1,16 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/usecase/get_characters_usecase.dart';
+import '../../../core/services/error_reporting_service.dart';
 import '../../../../src/domain/entities/character.dart';
 import 'character_event.dart';
 import 'character_state.dart';
 
 class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
   final GetCharactersUseCase _getCharactersUseCase;
+  final ErrorReportingService _errorReporting;
   static const int _pageSize = 10;
 
-  CharacterBloc({required GetCharactersUseCase getCharactersUseCase})
-    : _getCharactersUseCase = getCharactersUseCase,
-      super(CharacterInitial()) {
+  CharacterBloc({
+    required GetCharactersUseCase getCharactersUseCase,
+    required ErrorReportingService errorReporting,
+  }) : _getCharactersUseCase = getCharactersUseCase,
+       _errorReporting = errorReporting,
+       super(CharacterInitial()) {
     on<FetchCharacters>(_onFetchCharacters);
     on<FetchMoreCharacters>(_onFetchMoreCharacters);
     on<SearchCharacters>(_onSearchCharacters);
@@ -36,7 +41,12 @@ class CharacterBloc extends Bloc<CharacterEvent, CharacterState> {
           hasReachedMax: displayed.length >= allCharacters.length,
         ),
       );
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'character_bloc_fetch',
+      );
       emit(CharacterError(_mapErrorToMessage(e)));
     }
   }

@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import '../../data/datasource/interfaces/i_favorites_local_service.dart';
@@ -30,7 +29,7 @@ import '../../presentation/bloc/main/main_bloc.dart';
 import '../db/hive_local_storage.dart';
 import '../interfaces/local_storage.dart';
 import '../network/dio_client.dart';
-import '../services/analytics_service.dart';
+import '../services/error_reporting_service.dart';
 import '../services/auth_service.dart';
 
 final sl = GetIt.instance;
@@ -45,17 +44,16 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => DioClient(sl()));
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
-  sl.registerLazySingleton(() => FirebaseAnalytics.instance);
 
   // Auth
-  sl.registerLazySingleton<IAuthRepository>(() => AuthRepository(sl()));
+  sl.registerLazySingleton<IAuthRepository>(() => AuthRepository(sl(), sl()));
   sl.registerLazySingleton(() => AuthService(sl()));
 
-  // Analytics
-  sl.registerLazySingleton(() => AnalyticsService(sl()));
+  // Error Reporting
+  sl.registerLazySingleton(() => ErrorReportingService());
 
   // Datasources
-  sl.registerLazySingleton<ISwapiService>(() => SwapiService(sl()));
+  sl.registerLazySingleton<ISwapiService>(() => SwapiService(sl(), sl()));
 
   // Register local datasource with instance name
   sl.registerLazySingleton<IFavoritesDataSource>(
@@ -71,14 +69,14 @@ Future<void> initDependencies() async {
 
   // Repositories
   sl.registerLazySingleton<ICharacterRepository>(
-    () => CharacterRepository(sl()),
+    () => CharacterRepository(sl(), sl()),
   );
   sl.registerLazySingleton<IFavoritesRepository>(
     () => FavoritesRepository(
       localDataSource: sl(instanceName: 'local'),
       remoteDataSource: sl(instanceName: 'remote'),
       authService: sl(),
-      analytics: sl(),
+      errorReporting: sl<ErrorReportingService>(),
     ),
   );
 
@@ -101,13 +99,16 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetAuthStreamUseCase(sl()));
 
   // Blocs
-  sl.registerFactory(() => CharacterBloc(getCharactersUseCase: sl()));
+  sl.registerFactory(
+    () => CharacterBloc(getCharactersUseCase: sl(), errorReporting: sl()),
+  );
   sl.registerFactory(
     () => FavoritesBloc(
       getFavoritesUseCase: sl(),
       addFavoriteUseCase: sl(),
       removeFavoriteUseCase: sl(),
       clearFavoritesUseCase: sl(),
+      errorReporting: sl(),
     ),
   );
   sl.registerFactory(
@@ -117,6 +118,7 @@ Future<void> initDependencies() async {
       signInUseCase: sl(),
       signUpUseCase: sl(),
       signInAnonymouslyUseCase: sl(),
+      errorReporting: sl(),
     ),
   );
   sl.registerFactory(() => MainBloc());

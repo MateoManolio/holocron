@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../core/services/analytics_service.dart';
+import '../../../core/services/error_reporting_service.dart';
 import '../../../core/services/auth_service.dart';
 import '../../models/character_model.dart';
 import '../interfaces/i_favorites_local_service.dart';
@@ -9,12 +9,12 @@ import '../interfaces/i_favorites_local_service.dart';
 class FavoritesRemoteDataSourceImpl implements IFavoritesDataSource {
   final FirebaseFirestore _firestore;
   final AuthService _authService;
-  final AnalyticsService _analytics;
+  final ErrorReportingService _errorReporting;
 
   FavoritesRemoteDataSourceImpl(
     this._firestore,
     this._authService,
-    this._analytics,
+    this._errorReporting,
   );
 
   String get _collectionPath {
@@ -32,11 +32,12 @@ class FavoritesRemoteDataSourceImpl implements IFavoritesDataSource {
       return snapshot.docs
           .map((doc) => CharacterModel.fromJson(doc.data()))
           .toList();
-    } catch (e) {
+    } catch (e, stackTrace) {
       // Log error but don't throw - allows fallback to local storage
-      await _analytics.logSyncError(
+      await _errorReporting.logSyncError(
         operation: 'get_favorites',
         error: e.toString(),
+        stackTrace: stackTrace,
       );
       return [];
     }
@@ -49,11 +50,12 @@ class FavoritesRemoteDataSourceImpl implements IFavoritesDataSource {
           .collection(_collectionPath)
           .doc(character.id.toString())
           .set(character.toJson(), SetOptions(merge: true));
-    } catch (e) {
+    } catch (e, stackTrace) {
       // Log error but don't throw - local storage will still work
-      await _analytics.logSyncError(
+      await _errorReporting.logSyncError(
         operation: 'save_favorite',
         error: e.toString(),
+        stackTrace: stackTrace,
       );
     }
   }
@@ -62,10 +64,11 @@ class FavoritesRemoteDataSourceImpl implements IFavoritesDataSource {
   Future<void> removeFavorite(String id) async {
     try {
       await _firestore.collection(_collectionPath).doc(id).delete();
-    } catch (e) {
-      await _analytics.logSyncError(
+    } catch (e, stackTrace) {
+      await _errorReporting.logSyncError(
         operation: 'remove_favorite',
         error: e.toString(),
+        stackTrace: stackTrace,
       );
     }
   }
@@ -75,10 +78,11 @@ class FavoritesRemoteDataSourceImpl implements IFavoritesDataSource {
     try {
       final doc = await _firestore.collection(_collectionPath).doc(id).get();
       return doc.exists;
-    } catch (e) {
-      await _analytics.logSyncError(
+    } catch (e, stackTrace) {
+      await _errorReporting.logSyncError(
         operation: 'contains_favorite',
         error: e.toString(),
+        stackTrace: stackTrace,
       );
       return false;
     }
@@ -95,12 +99,12 @@ class FavoritesRemoteDataSourceImpl implements IFavoritesDataSource {
       }
 
       await batch.commit();
-    } catch (e) {
-      await _analytics.logSyncError(
+    } catch (e, stackTrace) {
+      await _errorReporting.logSyncError(
         operation: 'clear_favorites',
         error: e.toString(),
+        stackTrace: stackTrace,
       );
     }
   }
 }
-

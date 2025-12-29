@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/usecase/auth_usecases.dart';
+import '../../../core/services/error_reporting_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -12,6 +13,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInUseCase _signInUseCase;
   final SignUpUseCase _signUpUseCase;
   final SignInAnonymouslyUseCase _signInAnonymouslyUseCase;
+  final ErrorReportingService _errorReporting;
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -26,11 +28,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required SignInUseCase signInUseCase,
     required SignUpUseCase signUpUseCase,
     required SignInAnonymouslyUseCase signInAnonymouslyUseCase,
+    required ErrorReportingService errorReporting,
   }) : _getAuthStreamUseCase = getAuthStreamUseCase,
        _signOutUseCase = signOutUseCase,
        _signInUseCase = signInUseCase,
        _signUpUseCase = signUpUseCase,
        _signInAnonymouslyUseCase = signInAnonymouslyUseCase,
+       _errorReporting = errorReporting,
        super(const AuthState.unknown()) {
     on<AuthSubscriptionRequested>(_onSubscriptionRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
@@ -85,7 +89,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
       await _signInUseCase(email, password);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_bloc_login',
+      );
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
@@ -102,7 +111,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
       await _signUpUseCase(email, password);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_bloc_signup',
+      );
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }
@@ -114,7 +128,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(state.copyWith(isLoading: true, errorMessage: null));
     try {
       await _signInAnonymouslyUseCase();
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'auth_bloc_guest_login',
+      );
       emit(state.copyWith(isLoading: false, errorMessage: e.toString()));
     }
   }

@@ -1,13 +1,15 @@
 import '../../domain/contracts/i_character_repository.dart';
 import '../../domain/entities/character.dart';
+import '../../core/services/error_reporting_service.dart';
 import '../datasource/interfaces/i_swapi_service.dart';
 import '../models/character_dto.dart';
 
 class CharacterRepository implements ICharacterRepository {
   final ISwapiService _swapiService;
+  final ErrorReportingService _errorReporting;
   List<Character>? _cachedCharacters;
 
-  CharacterRepository(this._swapiService);
+  CharacterRepository(this._swapiService, this._errorReporting);
 
   @override
   Future<List<Character>> getCharacters() async {
@@ -17,7 +19,12 @@ class CharacterRepository implements ICharacterRepository {
       final dtos = await _swapiService.getPeople();
       _cachedCharacters = dtos.map(_mapDtoToEntity).toList();
       return _cachedCharacters!;
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'character_repository_get_characters',
+      );
       rethrow;
     }
   }
@@ -32,7 +39,12 @@ class CharacterRepository implements ICharacterRepository {
     try {
       final dto = await _swapiService.getPerson(int.parse(id));
       return _mapDtoToEntity(dto);
-    } catch (e) {
+    } catch (e, stackTrace) {
+      _errorReporting.logError(
+        error: e,
+        stackTrace: stackTrace,
+        context: 'character_repository_get_character_by_id',
+      );
       rethrow;
     }
   }
@@ -73,4 +85,3 @@ class CharacterRepository implements ICharacterRepository {
     );
   }
 }
-
