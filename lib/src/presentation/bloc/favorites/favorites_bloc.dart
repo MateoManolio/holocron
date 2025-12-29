@@ -58,7 +58,15 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   ) async {
     try {
       await _addFavoriteUseCase.call(event.character);
-      add(LoadFavorites());
+
+      final currentState = state;
+      if (currentState is FavoritesLoaded) {
+        final updatedFavorites = List<Character>.from(currentState.favorites)
+          ..add(event.character);
+        emit(currentState.copyWith(favorites: updatedFavorites));
+      } else {
+        add(LoadFavorites());
+      }
     } catch (e, stackTrace) {
       _errorReporting.logError(
         error: e,
@@ -75,7 +83,16 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   ) async {
     try {
       await _removeFavoriteUseCase.call(event.id);
-      add(LoadFavorites());
+
+      final currentState = state;
+      if (currentState is FavoritesLoaded) {
+        final updatedFavorites = currentState.favorites
+            .where((c) => c.id.toString() != event.id)
+            .toList();
+        emit(currentState.copyWith(favorites: updatedFavorites));
+      } else {
+        add(LoadFavorites());
+      }
     } catch (e, stackTrace) {
       _errorReporting.logError(
         error: e,

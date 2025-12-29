@@ -16,6 +16,15 @@ class CharactersGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FavoritesBloc, FavoritesState>(
+      buildWhen: (previous, current) {
+        if (previous is FavoritesLoaded && current is FavoritesLoaded) {
+          final prevIds = previous.favorites.map((f) => f.id).toSet();
+          final currIds = current.favorites.map((f) => f.id).toSet();
+          return prevIds.length != currIds.length ||
+              !prevIds.containsAll(currIds);
+        }
+        return true;
+      },
       builder: (context, favState) {
         final favoriteIds = favState is FavoritesLoaded
             ? favState.favorites.map((f) => f.id).toSet()

@@ -44,6 +44,7 @@ class _CharacterCardState extends State<CharacterCard>
     _favoriteController = AnimationController(
       duration: const Duration(milliseconds: _favoriteAnimDurationMs),
       vsync: this,
+      value: widget.isFavorite ? 1.0 : 0.0,
     );
     _scaleAnimation = Tween<double>(
       begin: _initialScale,
