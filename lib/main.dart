@@ -18,22 +18,29 @@ import 'src/presentation/bloc/main/main_bloc.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await initDependencies();
-  await SentryFlutter.init((options) {
-    options.dsn = const String.fromEnvironment('SENTRY_DSN');
-    // Adds request headers and IP for users, for more info visit:
-    // https://docs.sentry.io/platforms/dart/guides/flutter/data-management/data-collected/
-    options.sendDefaultPii = true;
-    options.enableLogs = true;
-    // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
-    // We recommend adjusting this value in production.
-    options.tracesSampleRate = 1.0;
-    // Configure Session Replay
-    options.replay.sessionSampleRate = 0.1;
-    options.replay.onErrorSampleRate = 1.0;
-  }, appRunner: () => runApp(SentryWidget(child: const MainApp())));
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = const String.fromEnvironment('SENTRY_DSN');
+      // Adds request headers and IP for users, for more info visit:
+      // https://docs.sentry.io/platforms/dart/guides/flutter/data-management/data-collected/
+      options.sendDefaultPii = true;
+      options.enableLogs = true;
+      // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
+      // We recommend adjusting this value in production.
+      options.tracesSampleRate = 1.0;
+      // Configure Session Replay
+      options.replay.sessionSampleRate = 0.1;
+      options.replay.onErrorSampleRate = 1.0;
+    },
+    appRunner: () async {
+      // SentryFlutter.init calls ensureInitialized internally, no need to call it again
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      await initDependencies();
+      runApp(SentryWidget(child: const MainApp()));
+    },
+  );
 }
 
 class MainApp extends StatelessWidget {

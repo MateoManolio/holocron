@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                           FetchMoreCharacters(),
                         ),
                 ),
-              ] else if (state is CharacterLoading)
+              ] else if (state is CharacterLoading || state is CharacterInitial)
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.all(40.0),

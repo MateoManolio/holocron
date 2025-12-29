@@ -126,10 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   );
                                 }
-                                if (state.status == AuthStatus.authenticated ||
-                                    state.status == AuthStatus.guest) {
-                                  Navigator.of(context).pop();
-                                }
+                                // AuthWrapper handles page transition automatically
                               },
                               builder: (context, state) {
                                 return HyperdriveButton(

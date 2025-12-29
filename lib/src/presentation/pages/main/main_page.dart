@@ -8,6 +8,11 @@ import '../home/widgets/holocron_app_bar.dart';
 import '../../bloc/main/main_bloc.dart';
 import '../../bloc/main/main_event.dart';
 import '../../bloc/main/main_state.dart';
+import '../../bloc/character/character_bloc.dart';
+import '../../bloc/character/character_event.dart';
+import '../../bloc/character/character_state.dart';
+import '../../bloc/favorites/favorites_bloc.dart';
+import '../../bloc/favorites/favorites_event.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -23,6 +28,17 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _pageController = PageController();
+
+    // Use addPostFrameCallback to ensure BuildContext is fully available
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final characterBloc = context.read<CharacterBloc>();
+      if (characterBloc.state is CharacterInitial) {
+        characterBloc.add(FetchCharacters());
+      }
+
+      // Always reload favorites on main page init to ensure fresh data for current user
+      context.read<FavoritesBloc>().add(LoadFavorites());
+    });
   }
 
   @override

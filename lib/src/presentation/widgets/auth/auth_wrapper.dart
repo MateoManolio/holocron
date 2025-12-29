@@ -30,6 +30,7 @@ class AuthWrapper extends StatelessWidget {
             return const LoginPage();
           case AuthStatus.unknown:
             return const Scaffold(
+              backgroundColor: Color(0xFF0A0E27), // AppTheme.spaceBlack
               body: Center(child: CircularProgressIndicator()),
             );
         }
