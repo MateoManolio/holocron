@@ -73,7 +73,7 @@ class FavoritesHeader extends StatelessWidget {
                         'Clear Database',
                         style: AppTheme.heading1.copyWith(fontSize: 20),
                       ),
-                      content: Text(
+                      content: const Text(
                         'This will delete all saved characters from your local database. This action cannot be undone.',
                         style: AppTheme.bodyText,
                       ),

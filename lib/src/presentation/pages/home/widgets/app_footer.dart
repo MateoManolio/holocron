@@ -11,7 +11,7 @@ class AppFooter extends StatelessWidget {
       margin: const EdgeInsets.only(top: 60),
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [AppTheme.deepSpace, AppTheme.spaceBlack],
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
@@ -32,7 +32,7 @@ class AppFooter extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     colors: [AppTheme.imperialYellow, AppTheme.holoBlue],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,

@@ -170,8 +170,9 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 Flexible(
                                   child: TextButton(
-                                    onPressed: () =>
-                                        authBloc.add(AuthGuestLoginRequested()),
+                                    onPressed: () => authBloc.add(
+                                      const AuthGuestLoginRequested(),
+                                    ),
                                     child: const Text(
                                       'Guest Mode',
                                       style: TextStyle(

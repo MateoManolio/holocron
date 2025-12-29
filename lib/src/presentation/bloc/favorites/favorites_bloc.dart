@@ -141,7 +141,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   }
 
   List<Character> _sortFavorites(List<Character> favorites, String sortOption) {
-    var sorted = List<Character>.from(favorites);
+    final sorted = List<Character>.from(favorites);
 
     switch (sortOption) {
       case 'Name A-Z':

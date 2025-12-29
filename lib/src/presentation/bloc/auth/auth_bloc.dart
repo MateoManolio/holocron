@@ -160,7 +160,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) {
     if (state.user?.isGuest == true) {
-      add(AuthNavigateToLoginRequested());
+      add(const AuthNavigateToLoginRequested());
     }
   }
 

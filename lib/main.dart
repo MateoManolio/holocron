@@ -51,7 +51,7 @@ class MainApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => sl<AuthBloc>()..add(AuthSubscriptionRequested()),
+          create: (_) => sl<AuthBloc>()..add(const AuthSubscriptionRequested()),
         ),
         BlocProvider(
           create: (_) => sl<CharacterBloc>()..add(FetchCharacters()),

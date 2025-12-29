@@ -1,7 +1,6 @@
 import 'dart:async';
 
 /// A simple debouncer to delay the execution of a function.
-/// Useful for search fields or other inputs that trigger expensive operations.
 class Debouncer {
   final Duration delay;
   Timer? _timer;
@@ -17,4 +16,3 @@ class Debouncer {
     _timer?.cancel();
   }
 }
-

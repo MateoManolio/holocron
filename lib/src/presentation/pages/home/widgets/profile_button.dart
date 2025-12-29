@@ -50,7 +50,7 @@ class _ProfileButtonState extends State<ProfileButton>
     final user = authBloc.state.user;
 
     if (user?.isGuest == true) {
-      authBloc.add(AuthNavigateToLoginRequested());
+      authBloc.add(const AuthNavigateToLoginRequested());
       return;
     }
 
@@ -95,10 +95,10 @@ class _ProfileButtonState extends State<ProfileButton>
             ],
           ),
         ),
-        PopupMenuItem<String>(
+        const PopupMenuItem<String>(
           value: 'logout',
           child: Row(
-            children: const [
+            children: [
               Icon(Icons.logout, color: AppTheme.imperialYellow, size: 20),
               SizedBox(width: 8),
               Text('Logout', style: TextStyle(color: Colors.white)),
@@ -108,7 +108,7 @@ class _ProfileButtonState extends State<ProfileButton>
       ],
     ).then((value) {
       if (context.mounted && value == 'logout') {
-        authBloc.add(AuthLogoutRequested());
+        authBloc.add(const AuthLogoutRequested());
       }
     });
   }

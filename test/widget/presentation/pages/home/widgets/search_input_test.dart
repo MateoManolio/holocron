@@ -53,9 +53,9 @@ void main() {
   testWidgets('shows filter popover when tune icon is pressed', (
     WidgetTester tester,
   ) async {
-    final loadedState = CharacterLoaded(
-      allCharacters: const [],
-      displayedCharacters: const [],
+    const loadedState = CharacterLoaded(
+      allCharacters: [],
+      displayedCharacters: [],
       hasReachedMax: false,
       isFilterPopoverOpen: true,
     );

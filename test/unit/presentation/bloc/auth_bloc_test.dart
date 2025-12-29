@@ -57,7 +57,7 @@ void main() {
           errorReporting: mockErrorReportingService,
         );
       },
-      act: (bloc) => bloc.add(AuthLogoutRequested()),
+      act: (bloc) => bloc.add(const AuthLogoutRequested()),
       verify: (_) {
         verify(() => mockSignOutUseCase()).called(1);
       },
