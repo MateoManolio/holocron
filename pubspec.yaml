@@ -7,6 +7,7 @@ environment:
   sdk: ^3.10.3
 
 dependencies:
+  sentry_flutter: ^9.9.1
   flutter:
     sdk: flutter
   dio: ^5.9.0
@@ -22,6 +23,7 @@ dependencies:
   firebase_analytics: ^12.1.0
 
 dev_dependencies:
+  sentry_dart_plugin: ^3.2.0
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
@@ -34,3 +36,9 @@ flutter:
   assets:
     - assets/people/
     - assets/background/
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter
+  org: elmanoom
