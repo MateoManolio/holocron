@@ -10,12 +10,14 @@ void main() {
   late MockFirebaseAuth mockFirebaseAuth;
   late MockUser mockUser;
   late MockUserCredential mockUserCredential;
+  late MockErrorReportingService mockErrorReportingService;
 
   setUp(() {
     mockFirebaseAuth = MockFirebaseAuth();
     mockUser = MockUser();
     mockUserCredential = MockUserCredential();
-    repository = AuthRepository(mockFirebaseAuth);
+    mockErrorReportingService = MockErrorReportingService();
+    repository = AuthRepository(mockFirebaseAuth, mockErrorReportingService);
   });
 
   group('signInAnonymously', () {
@@ -39,6 +41,13 @@ void main() {
       when(
         () => mockFirebaseAuth.signInAnonymously(),
       ).thenThrow(Exception('Error'));
+      when(
+        () => mockErrorReportingService.logError(
+          error: any(named: 'error'),
+          stackTrace: any(named: 'stackTrace'),
+          context: any(named: 'context'),
+        ),
+      ).thenAnswer((_) async => {});
 
       expect(
         () => repository.signInAnonymously(),

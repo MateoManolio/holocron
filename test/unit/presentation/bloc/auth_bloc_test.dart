@@ -7,12 +7,12 @@ import 'package:holocron/src/presentation/bloc/auth/auth_state.dart';
 import '../../../helpers/mocks.dart';
 
 void main() {
-  late AuthBloc authBloc;
   late MockGetAuthStreamUseCase mockGetAuthStreamUseCase;
   late MockSignOutUseCase mockSignOutUseCase;
   late MockSignInUseCase mockSignInUseCase;
   late MockSignUpUseCase mockSignUpUseCase;
   late MockSignInAnonymouslyUseCase mockSignInAnonymouslyUseCase;
+  late MockErrorReportingService mockErrorReportingService;
 
   setUp(() {
     mockGetAuthStreamUseCase = MockGetAuthStreamUseCase();
@@ -20,30 +20,42 @@ void main() {
     mockSignInUseCase = MockSignInUseCase();
     mockSignUpUseCase = MockSignUpUseCase();
     mockSignInAnonymouslyUseCase = MockSignInAnonymouslyUseCase();
-
-    authBloc = AuthBloc(
-      getAuthStreamUseCase: mockGetAuthStreamUseCase,
-      signOutUseCase: mockSignOutUseCase,
-      signInUseCase: mockSignInUseCase,
-      signUpUseCase: mockSignUpUseCase,
-      signInAnonymouslyUseCase: mockSignInAnonymouslyUseCase,
-    );
-  });
-
-  tearDown(() {
-    authBloc.close();
+    mockErrorReportingService = MockErrorReportingService();
   });
 
   group('AuthBloc', () {
     test('initial state is unknown', () {
+      final authBloc = AuthBloc(
+        getAuthStreamUseCase: mockGetAuthStreamUseCase,
+        signOutUseCase: mockSignOutUseCase,
+        signInUseCase: mockSignInUseCase,
+        signUpUseCase: mockSignUpUseCase,
+        signInAnonymouslyUseCase: mockSignInAnonymouslyUseCase,
+        errorReporting: mockErrorReportingService,
+      );
       expect(authBloc.state, const AuthState.unknown());
+      authBloc.close();
     });
 
     blocTest<AuthBloc, AuthState>(
       'emits unauthenticated when logout is requested',
       build: () {
         when(() => mockSignOutUseCase()).thenAnswer((_) async => {});
-        return authBloc;
+        when(
+          () => mockErrorReportingService.logError(
+            error: any(named: 'error'),
+            stackTrace: any(named: 'stackTrace'),
+            context: any(named: 'context'),
+          ),
+        ).thenAnswer((_) async => {});
+        return AuthBloc(
+          getAuthStreamUseCase: mockGetAuthStreamUseCase,
+          signOutUseCase: mockSignOutUseCase,
+          signInUseCase: mockSignInUseCase,
+          signUpUseCase: mockSignUpUseCase,
+          signInAnonymouslyUseCase: mockSignInAnonymouslyUseCase,
+          errorReporting: mockErrorReportingService,
+        );
       },
       act: (bloc) => bloc.add(AuthLogoutRequested()),
       verify: (_) {
@@ -57,10 +69,27 @@ void main() {
         when(
           () => mockSignInUseCase(any(), any()),
         ).thenThrow(Exception('Login failed'));
-        return authBloc;
+        when(
+          () => mockErrorReportingService.logError(
+            error: any(named: 'error'),
+            stackTrace: any(named: 'stackTrace'),
+            context: any(named: 'context'),
+          ),
+        ).thenAnswer((_) async => {});
+        return AuthBloc(
+          getAuthStreamUseCase: mockGetAuthStreamUseCase,
+          signOutUseCase: mockSignOutUseCase,
+          signInUseCase: mockSignInUseCase,
+          signUpUseCase: mockSignUpUseCase,
+          signInAnonymouslyUseCase: mockSignInAnonymouslyUseCase,
+          errorReporting: mockErrorReportingService,
+        );
       },
-      act: (bloc) =>
-          bloc.add(const AuthLoginRequested(email: 'e', password: 'p')),
+      act: (bloc) {
+        bloc.emailController.text = 'test@test.com';
+        bloc.passwordController.text = 'password';
+        return bloc.add(const AuthLoginRequested());
+      },
       expect: () => [
         const AuthState.unknown().copyWith(isLoading: true),
         const AuthState.unknown().copyWith(

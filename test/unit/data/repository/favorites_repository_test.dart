@@ -9,7 +9,7 @@ void main() {
   late MockFavoritesDataSource mockLocalDataSource;
   late MockFavoritesDataSource mockRemoteDataSource;
   late MockAuthService mockAuthService;
-  late MockAnalyticsService mockAnalyticsService;
+  late MockErrorReportingService mockErrorReportingService;
 
   setUpAll(() {
     registerFallbackValue(CharacterModel(id: 0, name: ''));
@@ -19,13 +19,13 @@ void main() {
     mockLocalDataSource = MockFavoritesDataSource();
     mockRemoteDataSource = MockFavoritesDataSource();
     mockAuthService = MockAuthService();
-    mockAnalyticsService = MockAnalyticsService();
+    mockErrorReportingService = MockErrorReportingService();
 
     repository = FavoritesRepository(
       localDataSource: mockLocalDataSource,
       remoteDataSource: mockRemoteDataSource,
       authService: mockAuthService,
-      analytics: mockAnalyticsService,
+      errorReporting: mockErrorReportingService,
     );
   });
 

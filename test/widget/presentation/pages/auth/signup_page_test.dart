@@ -15,6 +15,9 @@ class FakeCharacter extends Fake implements Character {}
 
 void main() {
   late MockAuthBloc mockAuthBloc;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
+  late TextEditingController confirmPasswordController;
 
   setUpAll(() {
     registerFallbackValue(FakeAuthEvent());
@@ -23,6 +26,21 @@ void main() {
 
   setUp(() {
     mockAuthBloc = MockAuthBloc();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
+
+    when(() => mockAuthBloc.emailController).thenReturn(emailController);
+    when(() => mockAuthBloc.passwordController).thenReturn(passwordController);
+    when(
+      () => mockAuthBloc.confirmPasswordController,
+    ).thenReturn(confirmPasswordController);
+  });
+
+  tearDown(() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
   });
 
   Widget createWidgetUnderTest() {

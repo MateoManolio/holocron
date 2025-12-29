@@ -10,11 +10,14 @@ import '../../../helpers/mocks.dart';
 void main() {
   late CharacterBloc characterBloc;
   late MockGetCharactersUseCase mockGetCharactersUseCase;
+  late MockErrorReportingService mockErrorReportingService;
 
   setUp(() {
     mockGetCharactersUseCase = MockGetCharactersUseCase();
+    mockErrorReportingService = MockErrorReportingService();
     characterBloc = CharacterBloc(
       getCharactersUseCase: mockGetCharactersUseCase,
+      errorReporting: mockErrorReportingService,
     );
   });
 
@@ -55,6 +58,13 @@ void main() {
         when(
           () => mockGetCharactersUseCase.call(),
         ).thenThrow(Exception('Error'));
+        when(
+          () => mockErrorReportingService.logError(
+            error: any(named: 'error'),
+            stackTrace: any(named: 'stackTrace'),
+            context: any(named: 'context'),
+          ),
+        ).thenAnswer((_) async => {});
         return characterBloc;
       },
       act: (bloc) => bloc.add(FetchCharacters()),

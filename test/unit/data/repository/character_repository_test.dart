@@ -3,17 +3,20 @@ import 'package:mocktail/mocktail.dart';
 import 'package:holocron/src/data/repository/character_repository.dart';
 import 'package:holocron/src/data/models/character_dto.dart';
 import 'package:holocron/src/domain/entities/character.dart';
-import 'package:holocron/src/data/datasource/interfaces/i_swapi_service.dart';
-
-class MockSwapiService extends Mock implements ISwapiService {}
+import '../../../helpers/mocks.dart';
 
 void main() {
   late CharacterRepository repository;
   late MockSwapiService mockSwapiService;
+  late MockErrorReportingService mockErrorReportingService;
 
   setUp(() {
     mockSwapiService = MockSwapiService();
-    repository = CharacterRepository(mockSwapiService);
+    mockErrorReportingService = MockErrorReportingService();
+    repository = CharacterRepository(
+      mockSwapiService,
+      mockErrorReportingService,
+    );
   });
 
   final tCharacterDto = CharacterDto(id: 1, name: 'Luke');

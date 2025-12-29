@@ -13,6 +13,7 @@ void main() {
   late MockAddFavoriteUseCase mockAddFavoriteUseCase;
   late MockRemoveFavoriteUseCase mockRemoveFavoriteUseCase;
   late MockClearFavoritesUseCase mockClearFavoritesUseCase;
+  late MockErrorReportingService mockErrorReportingService;
 
   setUpAll(() {
     registerFallbackValue(Character(id: 0, name: ''));
@@ -23,12 +24,14 @@ void main() {
     mockAddFavoriteUseCase = MockAddFavoriteUseCase();
     mockRemoveFavoriteUseCase = MockRemoveFavoriteUseCase();
     mockClearFavoritesUseCase = MockClearFavoritesUseCase();
+    mockErrorReportingService = MockErrorReportingService();
 
     favoritesBloc = FavoritesBloc(
       getFavoritesUseCase: mockGetFavoritesUseCase,
       addFavoriteUseCase: mockAddFavoriteUseCase,
       removeFavoriteUseCase: mockRemoveFavoriteUseCase,
       clearFavoritesUseCase: mockClearFavoritesUseCase,
+      errorReporting: mockErrorReportingService,
     );
   });
 

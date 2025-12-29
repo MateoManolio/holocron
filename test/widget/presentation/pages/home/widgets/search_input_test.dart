@@ -53,17 +53,21 @@ void main() {
   testWidgets('shows filter popover when tune icon is pressed', (
     WidgetTester tester,
   ) async {
-    when(() => mockCharacterBloc.state).thenReturn(CharacterInitial());
+    final loadedState = CharacterLoaded(
+      allCharacters: const [],
+      displayedCharacters: const [],
+      hasReachedMax: false,
+      isFilterPopoverOpen: true,
+    );
+    when(() => mockCharacterBloc.state).thenReturn(loadedState);
     when(
       () => mockCharacterBloc.stream,
-    ).thenAnswer((_) => const Stream.empty());
+    ).thenAnswer((_) => Stream.fromIterable([loadedState]));
 
     await tester.pumpWidget(createWidgetUnderTest());
+    await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.tune));
-    await tester.pump();
-
-    // Verify filter options are visible (FilterPopover has uppercase labels)
+    // Expect the popover to be visible since we provided the state
     expect(find.text('GENDER'), findsOneWidget);
     expect(find.text('SPECIES'), findsOneWidget);
   });

@@ -12,6 +12,8 @@ class FakeAuthEvent extends Fake implements AuthEvent {}
 
 void main() {
   late MockAuthBloc mockAuthBloc;
+  late TextEditingController emailController;
+  late TextEditingController passwordController;
 
   setUpAll(() {
     registerFallbackValue(FakeAuthEvent());
@@ -19,6 +21,16 @@ void main() {
 
   setUp(() {
     mockAuthBloc = MockAuthBloc();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+
+    when(() => mockAuthBloc.emailController).thenReturn(emailController);
+    when(() => mockAuthBloc.passwordController).thenReturn(passwordController);
+  });
+
+  tearDown(() {
+    emailController.dispose();
+    passwordController.dispose();
   });
 
   Widget createWidgetUnderTest() {
