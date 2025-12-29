@@ -1,0 +1,27 @@
+name: Deploy to Firebase Hosting on Merge
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    
+    environment: Sentry 
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      
+      - run: flutter build web --release --dart-define=SENTRY_DSN=${{ secrets.SENTRY_DSN }}
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HOLOCRON_6A63D }}
+          channelId: live
+          projectId: holocron-6a63d
+          
