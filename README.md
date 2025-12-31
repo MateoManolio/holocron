@@ -5,6 +5,12 @@
 ![Architecture](https://img.shields.io/badge/Architecture-Clean-green)
 ![License](https://img.shields.io/badge/License-MIT-purple)
 
+
+**¡Hola! Esta es mi aplicación desplegada en [Firebase Hosting](https://holocron-6a63d.web.app/)**
+
+> [!IMPORTANT] 
+> Para este challenge, quise simular un entorno real de producción. No solo quería que funcionara, sino que fuera mantenible y escalable. Por eso elegí **Clean Architecture** con **BLoC**. Mi objetivo era que, si mañana queremos cambiar la API de Star Wars por otra, o la base de datos local, el impacto en la UI sea nulo.
+
 ## 📱 Descripción
 Holocron es una aplicación Flutter de vanguardia inspirada en el universo de Star Wars. Diseñada con una estética premium y micro-animaciones fluidas, permite a los usuarios explorar la vasta galaxia de personajes, gestionar favoritos y sincronizar datos en tiempo real entre almacenamiento local (Hive) y la nube (Cloud Firestore).
 
